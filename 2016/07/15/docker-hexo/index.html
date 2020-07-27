@@ -27,18 +27,18 @@
 <meta property="og:site_name" content="小竹&#39;s blog">
 <meta property="og:description" content="引用一下基友的话  最开始接触 Hexo 的时候是在 Windows 下, 安装过程还算顺利, 因此在初期还整理了6篇关于 Hexo 博客的搭建教程.   后来转投 Linux 大法, 期间重装电脑无数次, 每一次安装 Hexo 所需要的 nodejs, 和各种插件的时候都是闹心的过程, 玩的多了自然就熟了, Linux 下的安装基本没问题了.">
 <meta property="og:locale" content="zh">
-<meta property="og:image" content="https://blog.justforlxz.com/.com//zshrc.png">
-<meta property="og:image" content="https://blog.justforlxz.com/.com//ys1.png">
-<meta property="og:image" content="https://blog.justforlxz.com/.com//ys2.png">
-<meta property="og:image" content="https://blog.justforlxz.com/.com//ys3.png">
-<meta property="og:image" content="https://blog.justforlxz.com/.com//ys4.png">
-<meta property="og:image" content="https://blog.justforlxz.com/.com//ys5.png">
+<meta property="og:image" content="https://blog.justforlxz.com/2016/07/15/docker-hexo/zshrc.png">
+<meta property="og:image" content="https://blog.justforlxz.com/2016/07/15/docker-hexo/ys1.png">
+<meta property="og:image" content="https://blog.justforlxz.com/2016/07/15/docker-hexo/ys2.png">
+<meta property="og:image" content="https://blog.justforlxz.com/2016/07/15/docker-hexo/ys3.png">
+<meta property="og:image" content="https://blog.justforlxz.com/2016/07/15/docker-hexo/ys4.png">
+<meta property="og:image" content="https://blog.justforlxz.com/2016/07/15/docker-hexo/ys5.png">
 <meta property="article:published_time" content="2016-07-15T04:53:24.000Z">
-<meta property="article:modified_time" content="2020-07-21T01:58:08.759Z">
+<meta property="article:modified_time" content="2020-07-27T10:13:23.912Z">
 <meta property="article:author" content="小竹">
 <meta property="article:tag" content="实验室">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://blog.justforlxz.com/.com//zshrc.png">
+<meta name="twitter:image" content="https://blog.justforlxz.com/2016/07/15/docker-hexo/zshrc.png">
 
 <link rel="canonical" href="https://blog.justforlxz.com/2016/07/15/docker-hexo/">
 
@@ -223,7 +223,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-07-21 01:58:08" itemprop="dateModified" datetime="2020-07-21T01:58:08+00:00">2020-07-21</time>
+                <time title="Modified: 2020-07-27 10:13:23" itemprop="dateModified" datetime="2020-07-27T10:13:23+00:00">2020-07-27</time>
               </span>
 
           
@@ -267,17 +267,26 @@
 <p>来自mashiro.io</p>
 </blockquote>
 <p>他后来更新了一下dockerfile，他觉得以前的思路是错的，现在他要把hexo封装进docker当做工具，又写了几个alias。<br>安装docker，然后pull镜像</p>
-<pre><code>docker pull kirigayakazushin/docker-hexo</code></pre><p>pull镜像以后，写入alias，将docker-hexo当做本地工具。</p>
-<pre><code>alias hexo=&apos;docker run -it --rm -p 4000:4000 -v $PWD:/Hexo -v $HOME/.gitconfig:/home/docker/.gitconfig -v $HOME/.ssh:/home/docker/.ssh kirigayakazushin/docker-hexo hexo&apos;
+<pre><code>docker pull kirigayakazushin/docker-hexo</code></pre>
+<p>pull镜像以后，写入alias，将docker-hexo当做本地工具。</p>
+<pre><code>alias hexo=&#39;docker run -it --rm -p 4000:4000 -v $PWD:/Hexo -v $HOME/.gitconfig:/home/docker/.gitconfig -v $HOME/.ssh:/home/docker/.ssh kirigayakazushin/docker-hexo hexo&#39;
 
-alias npm=&apos;docker run -it --rm -v $PWD:/Hexo kirigayakazushin/docker-hexo npm&apos;
+alias npm=&#39;docker run -it --rm -v $PWD:/Hexo kirigayakazushin/docker-hexo npm&#39;
 
-alias ddnone=&quot;docker images | grep none | awk &apos;{print \$3}&apos; |xargs docker rmi&quot;</code></pre><p>然后执行一下命令</p>
+alias ddnone=&quot;docker images | grep none | awk &#39;{print \$3}&#39; |xargs docker rmi&quot;</code></pre>
+<p>然后执行一下命令</p>
 <pre><code>npm install hexo-generator-sitemap --save \
 &amp;&amp; npm install hexo-generator-feed --save \
-&amp;&amp; npm install hexo-deployer-git --save</code></pre><p>把以上内容写进rc文件，我是用zsh的，所以写入~/.zshrc。<br><img src="/.com//zshrc.png" alt="zshrc"></p>
+&amp;&amp; npm install hexo-deployer-git --save</code></pre>
+<p>把以上内容写进rc文件，我是用zsh的，所以写入~/.zshrc。</p>
+<img src="/2016/07/15/docker-hexo/zshrc.png" class="" title="zshrc">
+
 <p>接下来基本演示一下使用方式。</p>
-<p><img src="/.com//ys1.png" alt="ys1"><br><img src="/.com//ys2.png" alt="ys2"><br><img src="/.com//ys3.png" alt="ys3"><br><img src="/.com//ys4.png" alt="ys4"><br><img src="/.com//ys5.png" alt="ys5"></p>
+<img src="/2016/07/15/docker-hexo/ys1.png" class="" title="ys1">
+<img src="/2016/07/15/docker-hexo/ys2.png" class="" title="ys2">
+<img src="/2016/07/15/docker-hexo/ys3.png" class="" title="ys3">
+<img src="/2016/07/15/docker-hexo/ys4.png" class="" title="ys4">
+<img src="/2016/07/15/docker-hexo/ys5.png" class="" title="ys5">
 
     </div>
 
@@ -382,7 +391,7 @@ alias ddnone=&quot;docker images | grep none | awk &apos;{print \$3}&apos; |xarg
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">63</span>
+          <span class="site-state-item-count">62</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -395,7 +404,7 @@ alias ddnone=&quot;docker images | grep none | awk &apos;{print \$3}&apos; |xarg
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

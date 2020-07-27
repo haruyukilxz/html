@@ -213,7 +213,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-07-21 01:58:08" itemprop="dateModified" datetime="2020-07-21T01:58:08+00:00">2020-07-21</time>
+                <time title="Modified: 2020-07-27 10:13:23" itemprop="dateModified" datetime="2020-07-27T10:13:23+00:00">2020-07-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -310,7 +310,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-07-21 01:58:08" itemprop="dateModified" datetime="2020-07-21T01:58:08+00:00">2020-07-21</time>
+                <time title="Modified: 2020-07-27 10:13:23" itemprop="dateModified" datetime="2020-07-27T10:13:23+00:00">2020-07-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -405,7 +405,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-07-21 01:58:08" itemprop="dateModified" datetime="2020-07-21T01:58:08+00:00">2020-07-21</time>
+                <time title="Modified: 2020-07-27 10:13:23" itemprop="dateModified" datetime="2020-07-27T10:13:23+00:00">2020-07-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -442,8 +442,20 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><img src="http://manbizhi.com/images/20267945.jpg" alt="放张好看的图让咱兴奋一下"></p>
-<p>本文记录了咱对迭代器的一些理解</p>
+          <p>本文记录了咱对迭代器的一些理解</p>
+<p>C++ 标准库提供了三种类型组件:</p>
+<ul>
+<li>容器</li>
+<li>迭代器</li>
+<li>算法</li>
+</ul>
+<p>容器是指存储某种类型的结构，容器有两种:</p>
+<ul>
+<li>顺序容器 (vector、list和string等，是元素的有序集合。)</li>
+<li>关联容器 (set、map等，是包含查找元素的键值。 )</li>
+</ul>
+<p>遍历容器的方式之一就是迭代器，迭代器是一种泛型指针，普通指针指向一块内存，迭代器指向容器中的一个位置。STL的每个模板容器中，都定义了一组对应的迭代器类，使用迭代器和算法，就可以访问容器中特定位置的元素，而无需关心元素的类型。</p>
+<p>每种容器都定义了一对begin和end的函数，用于返回迭代器。如果容器中有元素的话，begin返回的迭代器指向第一个元素。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2018/07/09/C-plus-plus-Iterator-%E7%AC%94%E8%AE%B0/#more" rel="contents">
@@ -501,7 +513,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-07-21 01:58:08" itemprop="dateModified" datetime="2020-07-21T01:58:08+00:00">2020-07-21</time>
+                <time title="Modified: 2020-07-27 10:13:23" itemprop="dateModified" datetime="2020-07-27T10:13:23+00:00">2020-07-27</time>
               </span>
 
           
@@ -589,7 +601,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-07-21 01:58:08" itemprop="dateModified" datetime="2020-07-21T01:58:08+00:00">2020-07-21</time>
+                <time title="Modified: 2020-07-27 10:13:23" itemprop="dateModified" datetime="2020-07-27T10:13:23+00:00">2020-07-27</time>
               </span>
 
           
@@ -710,7 +722,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">63</span>
+          <span class="site-state-item-count">62</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -723,7 +735,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

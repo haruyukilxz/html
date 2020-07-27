@@ -28,7 +28,7 @@
 <meta property="og:description" content="其实arch的wiki已经提到了，而且这个问题是比较常见的，只需要删除steam的库就行。 wiki原文链接">
 <meta property="og:locale" content="zh">
 <meta property="article:published_time" content="2016-07-15T07:18:53.000Z">
-<meta property="article:modified_time" content="2020-07-21T01:58:08.759Z">
+<meta property="article:modified_time" content="2020-07-27T10:13:23.908Z">
 <meta property="article:author" content="小竹">
 <meta property="article:tag" content="实验室">
 <meta name="twitter:card" content="summary">
@@ -216,7 +216,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-07-21 01:58:08" itemprop="dateModified" datetime="2020-07-21T01:58:08+00:00">2020-07-21</time>
+                <time title="Modified: 2020-07-27 10:13:23" itemprop="dateModified" datetime="2020-07-27T10:13:23+00:00">2020-07-27</time>
               </span>
 
           
@@ -249,8 +249,10 @@
 <a id="more"></a>
 
 <p>删除运行库<br>运行此命令，删除在issues上已知的运行库问题:</p>
-<pre><code>find ~/.steam/root/ \( -name &quot;libgcc_s.so*&quot; -o -name &quot;libstdc++.so*&quot; -o -name &quot;libxcb.so*&quot; -o -name &quot;libgpg-error.so*&quot; \) -print -delete</code></pre><p>如果上面的命令不工作，则再次运行上面的命令，然后运行此命令。</p>
+<pre><code>find ~/.steam/root/ \( -name &quot;libgcc_s.so*&quot; -o -name &quot;libstdc++.so*&quot; -o -name &quot;libxcb.so*&quot; -o -name &quot;libgpg-error.so*&quot; \) -print -delete</code></pre>
+<p>如果上面的命令不工作，则再次运行上面的命令，然后运行此命令。</p>
 <pre><code>find ~/.local/share/Steam/ \( -name &quot;libgcc_s.so*&quot; -o -name &quot;libstdc++.so*&quot; -o -name &quot;libxcb.so*&quot; -o -name &quot;libgpg-error.so*&quot; \) -print -delete</code></pre>
+
     </div>
 
     
@@ -354,7 +356,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">63</span>
+          <span class="site-state-item-count">62</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -367,7 +369,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
