@@ -96,7 +96,7 @@
 
 <p>surface默认是开启了安全启动(Microsoft签名)和bitlocker来保障设备和系统安全，我作为一个linux系统的开发者，当然是需要在surface上装一个linux了，但是前两年zccrs已经踩过坑了，linux不识别surface键盘，同样的触摸、网卡、声卡等设备也工作的不是很正常，本来以为我要开启远程开发的生活了，还特意写了一篇<a href="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/">《使用VSCode远程开发DDE》</a>，来给公司里有同样烦恼的人，让他们也感受一下远程开发的魅力。</p>
 <p>苍天不负有心人，我成功的！</p>
-<p>我成功的使用上了ArchLinux,并且工作的十分良好。这多亏了github上的一个组织<a target="_blank" rel="noopener" href="https://github.com/linux-surface/linux-surface"><linux-surface></a>，有这么一些人，他们付出劳动来让手里的surface设备也用上linux,并且要和普通的x86兼容机一样工作，感谢他们的付出，也让我吃上了螃蟹，安装的过程我就不在这里详细说了，其实非常简单。</p>
+<p>我成功的使用上了ArchLinux,并且工作的十分良好。这多亏了github上的一个组织<a target="_blank" rel="noopener" href="https://github.com/linux-surface/linux-surface/">linux-surface</a>，有这么一些人，他们付出劳动来让手里的surface设备也用上linux,并且要和普通的x86兼容机一样工作，感谢他们的付出，也让我吃上了螃蟹，安装的过程我就不在这里详细说了，其实非常简单。</p>
 <p>首先因为surface只有一个usb口，而键盘并不能工作，所以需要一个usb的扩展器。先按fn+f6进bios关闭掉安全启动，修改引导顺序为usb优先，之后就是正常的安装系统，但是不需要安装仓库里的内核，我们需要安装linux-surface提供的仓库里的内核。</p>
 <p>这些都是非常正常的步骤，linux-surface提供了自己的仓库和内核，我们正常使用即可。</p>
 <p>这里开始就是我研究了半天的内容， <strong>开启安全模式!</strong></p>
