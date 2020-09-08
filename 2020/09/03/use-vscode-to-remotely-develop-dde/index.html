@@ -1,295 +1,95 @@
-<!DOCTYPE html>
-<html lang="zh">
+<!DOCTYPE HTML>
+<html>
 <head>
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.1">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/images/logo.svg" color="#222">
-
-<link rel="stylesheet" href="/css/main.css">
-
-
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-
-<script id="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"blog.justforlxz.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
-  </script>
-
-  <meta name="description" content="本文将介绍如何使用VSCode的远程开发套件连接到Deepin主机，进行DDE和其他软件的开发与调试.">
-<meta property="og:type" content="article">
-<meta property="og:title" content="使用VSCode远程开发DDE">
-<meta property="og:url" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/index.html">
-<meta property="og:site_name" content="小竹&#39;s blog">
-<meta property="og:description" content="本文将介绍如何使用VSCode的远程开发套件连接到Deepin主机，进行DDE和其他软件的开发与调试.">
-<meta property="og:locale" content="zh">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/W1KvXk0ylxHa9w8E.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/XvMxNUQrs9oyEYJF.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/tBB60YiLW79oMLC1.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/idQexXGZXPrqCBby.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/MWorTAHEAsJRt47E.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/WFN9jpqyRRXORtuP.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/Cw7Z7sF3rb8RiBzZ.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/qcXsO8ayHXyTMr62.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/9Cla2rDtfzfsHVSh.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/Do8KoBS0lwM1g09G.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/J7dPRyLYI4QBcma5.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/LjLHBXGQeuvXMk8k.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/VJQhRC7LXbhWyWdN.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/XJEqsfmwIO5FpUKS.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/zmVjGPVL7gphBZ7h.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/P1yXbz7pkrwXOEAS.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/WbxesoOf0RF1QqtZ.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/je8iADCEbmCT7sMZ.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/uUIxae7PVFDwSyUB.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/Ah6NUPpjjoDIL93K.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/UbibgDc1gL0tXNPy.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/kTjwUYxwt19QlwPt.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/5Q4JOQWUZnDMtBNx.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/l1IZdMrxfd0dH45a.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/FAkfeLuV4JBsc4Mx.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/mKDIuN2GI1pSfVpQ.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/sxNL1dJG5uFm22O1.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/X32Q5bhGX2B7CLGg.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/7JuWfnnURIt1NrdR.png">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/20200903_023112910_iOS.jpg">
-<meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/20200903_023116260_iOS.jpg">
-<meta property="article:published_time" content="2020-09-03T11:14:38.000Z">
-<meta property="article:modified_time" content="2020-09-08T05:21:47.140Z">
-<meta property="article:author" content="小竹">
-<meta property="article:tag" content="Linux">
-<meta property="article:tag" content="VS Code">
-<meta property="article:tag" content="Windows">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/W1KvXk0ylxHa9w8E.png">
-
-<link rel="canonical" href="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/">
-
-
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome : false,
-    isPost : true,
-    lang   : 'zh'
-  };
-</script>
-
-  <title>使用VSCode远程开发DDE | 小竹's blog</title>
+  <meta charset="utf-8">
   
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-129024325-1"></script>
-    <script>
-      if (CONFIG.hostname === location.hostname) {
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'UA-129024325-1');
-      }
-    </script>
+  <title>使用VSCode远程开发DDE | 小竹&#39;s blog | 永远不要停止思考</title>
+
+  
+  <meta name="author" content="小竹">
+  
+
+  
+  <meta name="description" content="小竹的博客">
+  
+
+  
+  
+  <meta name="keywords" content="Linux,VS Code,Windows">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="使用VSCode远程开发DDE"/>
+
+  <meta property="og:site_name" content="小竹&#39;s blog"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="小竹&#39;s blog" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.1.1"></head>
 
 
-  <script>
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?49e5979358cb9ca19e5e56fc4adc4a98";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
+<body>
+<div class="blog">
+  <div class="content">
 
-
-
-
-  <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
-<link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
-</head>
-
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
-    <div class="headband"></div>
-
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Toggle navigation bar">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
-    </div>
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">小竹&#39;s blog</a>
+    </h1>
+    <p class="site-description">永远不要停止思考</p>
   </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+      
+        <li><a href="/tags">Tags</a></li>
+      
+        <li><a href="/categories">Categories</a></li>
+      
+        <li><a href="/archives">Archives</a></li>
+      
+        <li><a href="/link">Links</a></li>
+      
+        <li><a href="/about">About</a></li>
+      
+    </ul>
+  </nav>
+</header>
 
-  <div class="site-meta">
+    <main class="site-main posts-loop">
+    <article>
 
-    <a href="/" class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">小竹's blog</h1>
-      <span class="logo-line-after"><i></i></span>
-    </a>
-      <p class="site-subtitle" itemprop="description">永远不要停止思考</p>
-  </div>
-
-  <div class="site-nav-right">
-    <div class="toggle popup-trigger">
-    </div>
-  </div>
-</div>
-
-
-
-
-<nav class="site-nav">
-  <ul id="menu" class="main-menu menu">
-        <li class="menu-item menu-item-home">
-
-    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
-
-  </li>
-        <li class="menu-item menu-item-about">
-
-    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
-
-  </li>
-        <li class="menu-item menu-item-tags">
-
-    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
-
-  </li>
-        <li class="menu-item menu-item-categories">
-
-    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
-
-  </li>
-        <li class="menu-item menu-item-links">
-
-    <a href="/link/" rel="section"><i class="link fa-fw"></i>links</a>
-
-  </li>
-  </ul>
-</nav>
-
-
-
-
-</div>
-    </header>
-
+  
     
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
-
-
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
-
-          <div class="content post posts-expand">
-            
-
+    <h3 class="article-title"><span>使用VSCode远程开发DDE</span></h3>
     
   
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
-    <link itemprop="mainEntityOfPage" href="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/12298476?s=460&u=2c38b7ed987489b75cd4d1ee1353c671add86985&v=4">
-      <meta itemprop="name" content="小竹">
-      <meta itemprop="description" content="小竹的博客">
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/09/03/use-vscode-to-remotely-develop-dde/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-09-03T11:14:38.000Z">
+          2020-09-03
+        </time>
+      </a>
     </span>
+  </div>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小竹's blog">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          使用VSCode远程开发DDE
-        </h1>
 
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-09-03 11:14:38" itemprop="dateCreated datePublished" datetime="2020-09-03T11:14:38+00:00">2020-09-03</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-09-08 05:21:47" itemprop="dateModified" datetime="2020-09-08T05:21:47+00:00">2020-09-08</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Disqus: </span>
-    
-    <a title="disqus" href="/2020/09/03/use-vscode-to-remotely-develop-dde/#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/09/03/use-vscode-to-remotely-develop-dde/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
   
 
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+  <div class="article-content">
+    <div class="entry">
       
         <p>本文将介绍如何使用VSCode的远程开发套件连接到Deepin主机，进行DDE和其他软件的开发与调试.</p>
 <a id="more"></a>
@@ -327,7 +127,7 @@
 <p>选择Add New SSH Host添加一个服务器。</p>
 <img src="/2020/09/03/use-vscode-to-remotely-develop-dde/qcXsO8ayHXyTMr62.png" class="" title="图片">
 
-<p>输入ssh的命令，例如 ssh <a href="mailto:&#108;&#120;&#122;&#64;&#49;&#48;&#x2e;&#50;&#48;&#x2e;&#x33;&#x32;&#46;&#53;&#52;">&#108;&#120;&#122;&#64;&#49;&#48;&#x2e;&#50;&#48;&#x2e;&#x33;&#x32;&#46;&#53;&#52;</a>。</p>
+<p>输入ssh的命令，例如 ssh <a href="mailto:&#108;&#120;&#122;&#x40;&#x31;&#48;&#x2e;&#50;&#48;&#46;&#51;&#50;&#x2e;&#53;&#52;">&#108;&#120;&#122;&#x40;&#x31;&#48;&#x2e;&#50;&#48;&#46;&#51;&#50;&#x2e;&#53;&#52;</a>。</p>
 <img src="/2020/09/03/use-vscode-to-remotely-develop-dde/9Cla2rDtfzfsHVSh.png" class="" title="图片">
 
 <p>然后选择一个保存配置的位置，一般默认选择用户家目录的.ssh目录即可。然后就提示添加成功，此时可以点击Connect按钮进行连接。</p>
@@ -373,7 +173,7 @@
 
 <p>我们需要进行一些调整，以便使用该配置文件进行调试。</p>
 <p>program字段是程序二进制文件的位置，一般情况下我们是要手动写好路径，但是如果项目的二进制特别多，更换配置文件就会非常麻烦，而且配置文件里写死路径也不是很方便，我查阅了CMake插件的文档，发现CMake插件提供了两个很重要的变量，可以让我们方便的查找到路径。</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">"program": "$&#123;command:cmake.launchTargetPath&#125;"</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&quot;program&quot;: &quot;$&#123;command:cmake.launchTargetPath&#125;&quot;</span><br></pre></td></tr></table></figure>
 
 <p>CMake插件提供了launchTargetPath的变量，它对应的是CMake插件选择的默认target，启动调试之前需要我们先选择好Target。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&quot;value&quot;: &quot;$PATH:$&#123;command:cmake.launchTargetDirectory&#125;&quot;</span><br></pre></td></tr></table></figure>
@@ -385,7 +185,7 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&quot;args&quot;: [</span><br><span class="line">  &quot;-d&quot;,</span><br><span class="line">  &quot;&#x2F;tmp&#x2F;x&quot;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
 
 <p>完整的配置如下：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"name"</span>: <span class="string">"(gdb) fuse"</span>,</span><br><span class="line">    <span class="attr">"type"</span>: <span class="string">"cppdbg"</span>,</span><br><span class="line">    <span class="attr">"request"</span>: <span class="string">"launch"</span>,</span><br><span class="line">    <span class="attr">"program"</span>: <span class="string">"$&#123;command:cmake.launchTargetPath&#125;"</span>,</span><br><span class="line">    <span class="attr">"args"</span>: [</span><br><span class="line">        <span class="string">"-d"</span>,</span><br><span class="line">        <span class="string">"/tmp/x"</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">"stopAtEntry"</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">"cwd"</span>: <span class="string">"$&#123;workspaceFolder&#125;"</span>,</span><br><span class="line">    <span class="attr">"environment"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"name"</span>: <span class="string">"PATH"</span>,</span><br><span class="line">            <span class="attr">"value"</span>: <span class="string">"$PATH:$&#123;command:cmake.launchTargetDirectory&#125;"</span></span><br><span class="line">        &#125;,</span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">"externalConsole"</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">"MIMode"</span>: <span class="string">"gdb"</span>,</span><br><span class="line">    <span class="attr">"setupCommands"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"description"</span>: <span class="string">"为 gdb 启用整齐打印"</span>,</span><br><span class="line">            <span class="attr">"text"</span>: <span class="string">"-enable-pretty-printing"</span>,</span><br><span class="line">            <span class="attr">"ignoreFailures"</span>: <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;(gdb) fuse&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;type&quot;</span>: <span class="string">&quot;cppdbg&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;request&quot;</span>: <span class="string">&quot;launch&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;program&quot;</span>: <span class="string">&quot;$&#123;command:cmake.launchTargetPath&#125;&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;args&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;-d&quot;</span>,</span><br><span class="line">        <span class="string">&quot;/tmp/x&quot;</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">&quot;stopAtEntry&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">&quot;cwd&quot;</span>: <span class="string">&quot;$&#123;workspaceFolder&#125;&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;environment&quot;</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;PATH&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;value&quot;</span>: <span class="string">&quot;$PATH:$&#123;command:cmake.launchTargetDirectory&#125;&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">&quot;externalConsole&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">&quot;MIMode&quot;</span>: <span class="string">&quot;gdb&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;setupCommands&quot;</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">&quot;description&quot;</span>: <span class="string">&quot;为 gdb 启用整齐打印&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;text&quot;</span>: <span class="string">&quot;-enable-pretty-printing&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;ignoreFailures&quot;</span>: <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h3 id="gdb调试"><a href="#gdb调试" class="headerlink" title="gdb调试"></a>gdb调试</h3><p>此时我们就可以先通过CMake插件构建整个项目，再切换到运行面板，启动调试。</p>
 <p>点击下方面板的Build按钮，构建项目。</p>
@@ -418,256 +218,85 @@
 
 <p>还有一种自动化测试的方案，该方案是我个人认为所有开发都应该掌握的，通过自动化测试，我们就可以完全使用远程开发来完成开发任务，调试的时候只需要等待自动测试结果返回即可，设想一下，某个模块需要点击很多地方才可以重现一个问题，我们只需要设置好断点，让程序自动开始执行所有函数，并在最终出现问题的地方停下，我们就可以开始手动单步跟踪问题，完全不需要使用鼠标人工点击。（然而理想很美好，现实很残酷，我个人目前都没有掌握自动化测试的方式，现在也是只能通过鼠标点点点来重现问题。</p>
 
+      
     </div>
 
-    
-    
-    
-
-      <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/Linux/" rel="tag"># Linux</a>
-              <a href="/tags/VS-Code/" rel="tag"># VS Code</a>
-              <a href="/tags/Windows/" rel="tag"># Windows</a>
-          </div>
-
-        
-
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2020/08/06/develop-startdde-on-archlinux/" rel="prev" title="在ArchLinux上开发startdde">
-      <i class="fa fa-chevron-left"></i> 在ArchLinux上开发startdde
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/09/06/deepin-git-version/" rel="next" title="deepin git version">
-      deepin git version <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
-    
-  </article>
-  
-  
-  
-
-
-
-          </div>
-          
-    
-  <div class="comments">
-    <div id="disqus_thread">
-      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
-    </div>
-  </div>
-  
-
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
-    }
-    if (activeClass) {
-      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
-      }
-    }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      let commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
-</script>
-
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
   </div>
 
-  <aside class="sidebar">
-    <div class="sidebar-inner">
+  <div class="article-footer">
+    <div class="article-meta pull-left">
 
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          Table of Contents
-        </li>
-        <li class="sidebar-nav-overview">
-          Overview
-        </li>
-      </ul>
+    
+      
 
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装VS-Code"><span class="nav-number">2.</span> <span class="nav-text">安装VS Code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装插件"><span class="nav-number">3.</span> <span class="nav-text">安装插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置远程环境"><span class="nav-number">4.</span> <span class="nav-text">配置远程环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开发和调试"><span class="nav-number">5.</span> <span class="nav-text">开发和调试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#功能介绍"><span class="nav-number">5.1.</span> <span class="nav-text">功能介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置启动参数"><span class="nav-number">5.2.</span> <span class="nav-text">设置启动参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gdb调试"><span class="nav-number">5.3.</span> <span class="nav-text">gdb调试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调试图形程序"><span class="nav-number">5.4.</span> <span class="nav-text">调试图形程序</span></a></li></ol></li></ol></div>
-      </div>
-      <!--/noindex-->
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>, <a href="/categories/Linux/技术/">技术</a>
+    </span>
+    
 
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="小竹"
-      src="https://avatars1.githubusercontent.com/u/12298476?s=460&u=2c38b7ed987489b75cd4d1ee1353c671add86985&v=4">
-  <p class="site-author-name" itemprop="name">小竹</p>
-  <div class="site-description" itemprop="description">小竹的博客</div>
-</div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/archives">
-          <span class="site-state-item-count">66</span>
-          <span class="site-state-item-name">posts</span>
-        </a>
-      </div>
-      <div class="site-state-item site-state-categories">
-            <a href="/categories/">
-          
-        <span class="site-state-item-count">13</span>
-        <span class="site-state-item-name">categories</span></a>
-      </div>
-      <div class="site-state-item site-state-tags">
-            <a href="/tags/">
-          
-        <span class="site-state-item-count">34</span>
-        <span class="site-state-item-name">tags</span></a>
-      </div>
-  </nav>
-</div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/justforlxz" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;justforlxz" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="mailto:justforlxz@gmail.com" title="E-Mail → mailto:justforlxz@gmail.com" rel="noopener" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://weibo.com/5906290378" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5906290378" rel="noopener" target="_blank"><i class="weibo fa-fw"></i>Weibo</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://twitter.com/justforlxz" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;justforlxz" rel="noopener" target="_blank"><i class="twitter fa-fw"></i>Twitter</a>
-      </span>
-  </div>
+    
+    
 
-
-
-      </div>
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/VS-Code/">VS Code</a><a href="/tags/Windows/">Windows</a>
+    </span>
+    
 
     </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
+
+    
+  </div>
+</article>
+
+  
+
+	<section id="comment" class="comment">
+		<div id="vcomments"></div>
+	</section>
+	<!-- LeanCloud -->
+	<script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.10.0/dist/av-min.js"></script>
+	<!-- Valine -->
+	<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+	<script>
+		new Valine({
+			el: '#vcomments',
+			appId: 'jwJxh95ly6NdjTRluyKYXm6G-gzGzoHsz',
+			appKey: 'lagqr7doy2slbm7oAMGoogpg'
+		})
+	</script>
 
 
-      </div>
+
+
+
+
     </main>
 
-    <footer class="footer">
-      <div class="footer-inner">
-        
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2020 小竹
+    
+  </p>
+</footer>
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-        
+    ga('create', 'UA-129024325-1', 'auto');
+    ga('send', 'pageview');
 
-<div class="copyright">
-  
-  &copy; 
-  <span itemprop="copyrightYear">2020</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">小竹</span>
+</script>
+
+  </div>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
-  </div>
-
-        
-
-
-
-
-
-
-
-
-      </div>
-    </footer>
-  </div>
-
-  
-  <script src="/lib/anime.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
-
-<script src="/js/utils.js"></script>
-
-<script src="/js/motion.js"></script>
-
-
-<script src="/js/schemes/pisces.js"></script>
-
-
-<script src="/js/next-boot.js"></script>
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  
-
-<script>
-  function loadCount() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://ilxz.disqus.com/count.js';
-    s.id = 'dsq-count-scr';
-    (d.head || d.body).appendChild(s);
-  }
-  // defer loading until the whole page loading is completed
-  window.addEventListener('load', loadCount, false);
-</script>
-<script>
-  var disqus_config = function() {
-    this.page.url = "https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/";
-    this.page.identifier = "2020/09/03/use-vscode-to-remotely-develop-dde/";
-    this.page.title = "使用VSCode远程开发DDE";
-    };
-  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
-    if (window.DISQUS) {
-      DISQUS.reset({
-        reload: true,
-        config: disqus_config
-      });
-    } else {
-      var d = document, s = d.createElement('script');
-      s.src = 'https://ilxz.disqus.com/embed.js';
-      s.setAttribute('data-timestamp', '' + +new Date());
-      (d.head || d.body).appendChild(s);
-    }
-  });
-</script>
-
 </body>
 </html>
