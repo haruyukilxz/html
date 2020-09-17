@@ -101,9 +101,12 @@
 </ul>
 <p>第二个问题比较特殊，因为dde在deepin和uos下运行的是fork版本的kwin,而Arch上运行的则是原版的kwin,一些操作代码并不具备，所以会出现一些奇葩的状况。</p>
 <p>第三个问题则是xsettings的原因，在移植者的仓库有对应的issue讨论 <a target="_blank" rel="noopener" href="https://github.com/wszqkzqk/deepin-wine-ubuntu/issues/12">《KDE环境完全无法使用wine-tim》</a></p>
-<p>第一个问题解决起来也比较简单，是因为缺少了LC_ALL的环境变量，一般都只会设置LANG、LANGUAGE等环境变量，并不会设置LC的，由于不太确定的原因，导致wine无法正确识别当前的locale,从而无法正确的渲染中文字体。而比较奇葩的是，把方块复制再粘贴，就可以正确的渲染了。</p>
-<p>解决的方法也很简单，在<code>~/.pam_environment</code>写入一行就可以了。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">LC_ALL&#x3D;zh_CN.UTF-8</span><br></pre></td></tr></table></figure>
+<p>第一个问题解决起来也比较简单，是因为缺少了宋体文件，从而无法正确的渲染中文字体。而比较奇葩的是，把方块复制再粘贴，就可以正确的渲染了。</p>
+<p>解决的方法也很简单，把windows的的字体复制过来就可以了。由于版权的问题，没办法直接提供文件，需要各位自己复制了。</p>
+<blockquote>
+<p>引用资料</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/wszqkzqk/deepin-wine-ubuntu/issues/136#issuecomment-517576733">https://github.com/wszqkzqk/deepin-wine-ubuntu/issues/136</a></p>
 
       
     </div>
