@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>小竹&#39;s blog | 永远不要停止思考</title>
+  <title>deepin-wine中文乱码 | 小竹&#39;s blog | 永远不要停止思考</title>
 
   
   <meta name="author" content="小竹">
@@ -14,12 +14,15 @@
   
 
   
+  
+  <meta name="keywords" content="Linux">
+  
 
   <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-  
+  <meta property="og:title" content="deepin-wine中文乱码"/>
 
   <meta property="og:site_name" content="小竹&#39;s blog"/>
 
@@ -68,14 +71,14 @@
 
   
     
-    <h3 class="article-title"><span></span></h3>
+    <h3 class="article-title"><span>deepin-wine中文乱码</span></h3>
     
   
 
   <div class="article-top-meta">
     <span class="posted-on">
-      <a href="/test.html" rel="bookmark">
-        <time class="entry-date published" datetime="2020-09-17T08:57:17.628Z">
+      <a href="/2020/09/17/deepin-wine-chinese-problem/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-09-17T16:32:12.000Z">
           2020-09-17
         </time>
       </a>
@@ -88,18 +91,19 @@
   <div class="article-content">
     <div class="entry">
       
-        <!DOCTYPE html>
-<html>
-<head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Page Title</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-</head>
-<body>
-
-</body>
-</html>
+        <p>众所周知，使用wine来运行windows下的一些软件是linux用户的常用操作，deepin为社区贡献了好几款中国用户必备的软件，例如QQ、微信、企业微信，以此来让更多的人无痛的切换到linux来。近年来value也一直在linux上布局，先后推出了steam主机和proton,前者是基于kvm和steam大屏幕模式的系统，而proton则是wine的分支，value提供了几组补丁用来提高性能和与Windows游戏的兼容性。</p>
+<p>Arch上有非常方便的aur仓库，有很多用户都自己提交一些软件到aur上面，就有几个维护者将deepin打包的deepin wine和对应的软件包移植到Arch上面来，已经是很多人在Arch上面运行QQ和微信的首选方案。</p>
+<p>但是使用的过程中我遇到了以下几个问题：</p>
+<ul>
+<li>输入框中文乱码</li>
+<li>在DDE桌面使用kwin的情况下最小化会卡死</li>
+<li>KDE桌面环境无法使用deepin wine的程序</li>
+</ul>
+<p>第二个问题比较特殊，因为dde在deepin和uos下运行的是fork版本的kwin,而Arch上运行的则是原版的kwin,一些操作代码并不具备，所以会出现一些奇葩的状况。</p>
+<p>第三个问题则是xsettings的原因，在移植者的仓库有对应的issue讨论 <a target="_blank" rel="noopener" href="https://github.com/wszqkzqk/deepin-wine-ubuntu/issues/12">《KDE环境完全无法使用wine-tim》</a></p>
+<p>第一个问题解决起来也比较简单，是因为缺少了LC_ALL的环境变量，一般都只会设置LANG、LANGUAGE等环境变量，并不会设置LC的，由于不太确定的原因，导致wine无法正确识别当前的locale,从而无法正确的渲染中文字体。而比较奇葩的是，把方块复制再粘贴，就可以正确的渲染了。</p>
+<p>解决的方法也很简单，在<code>~/.pam_environment</code>写入一行就可以了。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">LC_ALL&#x3D;zh_CN.UTF-8</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -110,7 +114,21 @@
     <div class="article-meta pull-left">
 
     
+      
 
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/技术/">技术</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a>
+    </span>
     
 
     </div>
