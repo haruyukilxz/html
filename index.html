@@ -212,6 +212,30 @@
                     <div class="post-entry__header"></div>
 <div class="post-entry__content">
     <h2 class="post-entry__title">
+        Qt多线程
+    </h2>
+    
+        <p>类型注册 Qt 有三种多线程的方式，分别是继承 QThread、使用 QObject 的 moveToThread 函数和 Qtconcurrent 协程。</p>
+<p>在很多文章中，大家都推荐继承 QThread 类，并重写 run 方法，在 run 中使用耗时操作代码。这种方式让我们觉得 QThread 是线程的实体。创建一个 QThread 对象就认为是开辟了一个新的线程。这种讨巧的方法似乎能帮助我们快速入门，但是只要深度了解多线程编程就会发现，这样子做会使代码脱离我们的控制，代码越写越复杂。最典型的问题就是明明将代码放入了新线程，但是仍然在旧线程中运行。</p>
+    
+</div>
+<div class="post-entry__meta">
+    <a href="/archives/2020/11/" class="post-meta__date button">
+    2020-11-17
+</a>
+    
+ 
+</div>
+<div class="post-entry__tags">
+    
+</div> 
+<a href="/2020/11/17/qt-multi-thread/" class="post-entry__link">Link</a>
+                </div>
+            
+                <div class='post-entry content-card'>
+                    <div class="post-entry__header"></div>
+<div class="post-entry__content">
+    <h2 class="post-entry__title">
         deepin-wine中文乱码
     </h2>
     
@@ -322,35 +346,6 @@
     
 </div> 
 <a href="/2020/09/03/use-vscode-to-remotely-develop-dde/" class="post-entry__link">Link</a>
-                </div>
-            
-                <div class='post-entry content-card'>
-                    <div class="post-entry__header"></div>
-<div class="post-entry__content">
-    <h2 class="post-entry__title">
-        在ArchLinux上开发startdde
-    </h2>
-    
-        <p>dde 后端使用 go 作为主要的开发语言，使用 dbus 提供接口，主要使用 gsettings 来保存配置。 所以在进行后端开发前需要对以上内容有基本的了解，这里假定本文档的阅读者熟悉 dbus 和 gsettings，并有一定的开发经验。</p>
-    
-</div>
-<div class="post-entry__meta">
-    <a href="/archives/2020/08/" class="post-meta__date button">
-    2020-08-06
-</a>
-    
-    <span class="separate-dot"></span><a href="/categories/Linux/" class="button">Linux</a>
-
- 
-</div>
-<div class="post-entry__tags">
-    
-        <a href="/tags/dde/" class="post-tags__link button"># dde</a>
-    
-        <a href="/tags/go/" class="post-tags__link button"># go</a>
-    
-</div> 
-<a href="/2020/08/06/develop-startdde-on-archlinux/" class="post-entry__link">Link</a>
                 </div>
             
         
