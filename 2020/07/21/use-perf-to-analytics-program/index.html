@@ -40,7 +40,7 @@
 <meta property="og:locale">
 <meta property="og:image" content="https://blog.justforlxz.com/2020/07/21/use-perf-to-analytics-program/bpf_performance_tools_book.png">
 <meta property="article:published_time" content="2020-07-21T09:15:11.000Z">
-<meta property="article:modified_time" content="2020-11-17T07:55:50.236Z">
+<meta property="article:modified_time" content="2020-12-22T05:40:59.662Z">
 <meta property="article:author" content="小竹">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary">
@@ -76,7 +76,7 @@
 
     <!-- custom head -->
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
+<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
 </head>
 
     <body>
@@ -243,7 +243,7 @@
     </div>
     <script>
         (() => {
-            var update = Date.parse("2020-11-17"),
+            var update = Date.parse("2020-12-22"),
                 date = new Date(),
                 now = date.getTime(),
                 expire = now - update,
@@ -265,14 +265,12 @@
 <h2 id="Linux-Perf-Tool"><a href="#Linux-Perf-Tool" class="headerlink" title="Linux Perf Tool"></a>Linux Perf Tool</h2><h3 id="允许系统进行分析"><a href="#允许系统进行分析" class="headerlink" title="允许系统进行分析"></a>允许系统进行分析</h3><p>为了能够正常分析，首先需要打开系统的调试功能，允许我们去对其他进程进行访问。</p>
 <h3 id="SysCtl"><a href="#SysCtl" class="headerlink" title="SysCtl"></a>SysCtl</h3><p>较新的Linux内核具有sysfs可调参数<code>/proc/sys/kernel/perf_event_paranoid</code>，该参数允许用户调整perf_events非root用户的可用功能，数量越大则越安全（相应地提供较少的功能）：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Consider tweaking &#x2F;proc&#x2F;sys&#x2F;kernel&#x2F;perf_event_paranoid:</span><br><span class="line"> -1 - Not paranoid at all</span><br><span class="line">  0 - Disallow raw tracepoint access for unpriv</span><br><span class="line">  1 - Disallow cpu events for unpriv</span><br><span class="line">  2 - Disallow kernel profiling for unpriv</span><br></pre></td></tr></table></figure>
-
 <p>默认值是不允许获取任何信息，所以我们需要修改为1或者0，允许我们访问CPU的事件信息。</p>
 <ul>
 <li>临时修改</li>
 </ul>
 <p>执行命令向内核接口直接写入值。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo tee &#x2F;proc&#x2F;sys&#x2F;kernel&#x2F;perf_event_paranoid &lt;&lt;&lt; 1</span><br></pre></td></tr></table></figure>
-
 <ul>
 <li>永久修改</li>
 </ul>
@@ -283,14 +281,11 @@
 </blockquote>
 <p>我们通过perf record命令才对程序进行采样记录。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">perf record -g --call-graph&#x3D;dwarf -F 99 &#x2F;usr&#x2F;bin&#x2F;dde-shutdown</span><br></pre></td></tr></table></figure>
-
 <p>命令介绍：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">-g: 即采样全部信息</span><br><span class="line">--call-graph: 设置并启用调用图（堆栈链&#x2F;回溯）记录，参数有fp(frame pointers)、dwarf(debug information)和lbr(Last Branch Record)。</span><br><span class="line">-F: 采样率</span><br></pre></td></tr></table></figure>
-
 <p>perf可以直接启动一个程序进行分析，也可以使用-p参数指定一个pid进行采样。</p>
 <h3 id="查看-perf-的采样结果"><a href="#查看-perf-的采样结果" class="headerlink" title="查看 perf 的采样结果"></a>查看 perf 的采样结果</h3><p>当我们通过perf record完成采样以后，会在执行目录生成perf.data文件，此时我们就可以使用perf report命令对data文件进行数据分析了。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">perf report --stdio</span><br></pre></td></tr></table></figure>
-
 <p>perf report会自动打开当前目录下的perf.data文件，当然也可以在最后指定perf.data文件的路径。</p>
 <p>perf report会根据–call-graph参数来生成不同的图，使用dwarf参数时会以函数调用栈的顺序来显示，使用这种方式可以方便的看出哪个函数执行的时间比较长，因为每次采样都能落到该函数上，也就意味着函数执行的时间非常长，再通过调用栈的深度来分析函数执行期间都在做什么事情。</p>
 <h3 id="hotspot火焰图"><a href="#hotspot火焰图" class="headerlink" title="hotspot火焰图"></a>hotspot火焰图</h3><p>在命令行下查看函数调用不是特别方便，所以就有图形化的工具用来方便的查看perf工具的生成结果，其中使用比较友好的是kde开发的hotspot工具，该工具可以直接打开perf.data文件，并生成对应的火焰图，火焰图是函数调用的另一种表现形式，火焰越高，也就意味着调用栈越深，火焰越广，也就意味着函数执行的时间很长。</p>
@@ -312,7 +307,7 @@
  
             <div class="post-footer__meta">
     <p>
-        updated at 2020-11-17
+        updated at 2020-12-22
     </p>
 </div> 
             <div class="post-meta__cats">

@@ -40,7 +40,7 @@
 <meta property="og:locale">
 <meta property="og:image" content="https://blog.justforlxz.com/2018/04/01/Linux%E7%9A%84PAM%E6%98%AF%E4%BB%80%E4%B9%88/PAM%E7%BB%93%E6%9E%84.png">
 <meta property="article:published_time" content="2018-04-01T12:16:08.000Z">
-<meta property="article:modified_time" content="2020-11-17T07:55:50.204Z">
+<meta property="article:modified_time" content="2020-12-22T05:40:59.638Z">
 <meta property="article:author" content="小竹">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary">
@@ -76,7 +76,7 @@
 
     <!-- custom head -->
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
+<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
 </head>
 
     <body>
@@ -241,7 +241,7 @@
     </div>
     <script>
         (() => {
-            var update = Date.parse("2020-11-17"),
+            var update = Date.parse("2020-12-22"),
                 date = new Date(),
                 now = date.getTime(),
                 expire = now - update,
@@ -286,7 +286,6 @@
 <h3 id="如何自己开发PAM模块"><a href="#如何自己开发PAM模块" class="headerlink" title="如何自己开发PAM模块"></a>如何自己开发PAM模块</h3><p>PAM模块使用一个pam_handle类型的结构当做句柄，也是唯一一个PAM和程序进行通信的结构。</p>
 <p>首先在编写的服务模块的源程序里要包含下列头文件：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#include &lt;security&#x2F;pam_modules.h&gt;</span><br></pre></td></tr></table></figure>
-
 <p>PAM模块是一个个的so动态库。PAM会通过dlopen来装载这些so。四个模块分别需要实现对应的方法，PAM会根据配置文件来调用这些方法。</p>
 <p>每个PAM模块的认证程序都以pam_start开始，以pam_end结束。PAM还提供了pam_get_item和pam_set_item共享有关认证会话的某些公共信息，例如用户名、服务名和密码。应用程序在调用了pam_start以后可以用这些APIs来改变状态信息。实际工作的函数有6个：</p>
 <table>
@@ -341,25 +340,19 @@
 <li>开发PAM验证模块</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#include &lt;security&#x2F;pam_appl.h&gt;</span><br><span class="line">#include &lt;security&#x2F;pam_modules.h&gt;</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 只实现账户认证</span><br><span class="line">PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc,</span><br><span class="line">                                   const char **argv) &#123;</span><br><span class="line">  char *username;</span><br><span class="line">  char password[256];</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F;得到用户名</span><br><span class="line">  pam_get_user(pamh, &amp;username, &quot;Username: &quot;);</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; 得到密码</span><br><span class="line">  printf(&quot;Password: &quot;);</span><br><span class="line">  gets(password);</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; 测试判断，如果用户名和密码不相等，就认证失败</span><br><span class="line">  if (strcmp(username, password) !&#x3D; 0) &#123;</span><br><span class="line">    return PAM_AUTH_ERR;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  printf(&quot;Password is: %s\n&quot;, password);</span><br><span class="line">  return PAM_SUCCESS;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>编译:</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">gcc -fPIC -fno-stack-protector -c pam_test_mod.c</span><br><span class="line">sudo ld -x --shared -o &#x2F;lib&#x2F;security&#x2F;pam_test_mod.so pam_test_mod.o</span><br></pre></td></tr></table></figure>
-
 <p>还需要修改pam的配置，来加载这个so。编辑/etc/pam.d/common-auth</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">auth [success&#x3D;1 default&#x3D;ignore] pam_test_mod.so</span><br></pre></td></tr></table></figure>
-
 <p>这里的success的值需要根据实际情况来调整，必须是所有里面的最大值。</p>
 <ol start="2">
 <li>使用模块进行验证</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; PAM必须的两个头文件</span><br><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;security&#x2F;pam_appl.h&gt;</span><br><span class="line">#include &lt;security&#x2F;pam_misc.h&gt;</span><br><span class="line"></span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">extern int misc_conv(int num_msg, const struct pam_message **msgm,</span><br><span class="line">                     struct pam_response **response, void *appdata_ptr) &#123;</span><br><span class="line"></span><br><span class="line">  return PAM_SUCCESS;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const struct pam_conv conv &#x3D; &#123;misc_conv, NULL&#125;;</span><br><span class="line"></span><br><span class="line">int main(int argc, char *argv[]) &#123;</span><br><span class="line">  &#x2F;&#x2F; 初始化</span><br><span class="line">  pam_handle_t *pamh &#x3D; NULL;</span><br><span class="line">  int retval;</span><br><span class="line">  const char *username &#x3D; argv[1];</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; 初始化PAM 设置common-auth为验证配置</span><br><span class="line">  if ((pam_start(&quot;common-auth&quot;, username, &amp;conv, &amp;pamh)) !&#x3D; PAM_SUCCESS) &#123;</span><br><span class="line">    return -1;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; &#x2F;&#x2F;认证用户</span><br><span class="line">  retval &#x3D; pam_authenticate(pamh, 0);</span><br><span class="line"></span><br><span class="line">  cout &lt;&lt; (retval &#x3D;&#x3D; PAM_SUCCESS ? &quot;SUCCESS\n&quot; : &quot;Failed\n&quot;) &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; &#x2F;&#x2F; 结束PAM</span><br><span class="line">  if (pam_end(pamh, retval) !&#x3D; PAM_SUCCESS) &#123;</span><br><span class="line">    cout &lt;&lt; &quot;check_user: failed to release authenticator\n&quot; &lt;&lt; endl;</span><br><span class="line">    return -1;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return retval &#x3D;&#x3D; PAM_SUCCESS ? 0 : 1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>编译测试一下:</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">g++ -o pam_test pam_test.cc -lpam -lpam_misc</span><br><span class="line">sudo .&#x2F;pam_test $USER</span><br></pre></td></tr></table></figure>
-
 <p>输出为：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ .&#x2F;pam_test test       </span><br><span class="line">Password: test</span><br><span class="line">Password is: test</span><br><span class="line">SUCCESS</span><br></pre></td></tr></table></figure>
-
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>基于PAM认证体系，我们可以根据自己的需求任意的扩展linux账户，linux下的pbis-open，就是基于PAM扩展出来的一个AD域登录模块，它提供了一个pam_lsass.so的文件，来进行账户的验证。我们也可以自己设计一套认证流程，只需要满足上面的接口要求就可以。</p>
 <blockquote>
 <p>提供机制，而非策略</p>
@@ -382,7 +375,7 @@
  
             <div class="post-footer__meta">
     <p>
-        updated at 2020-11-17
+        updated at 2020-12-22
     </p>
 </div> 
             <div class="post-meta__cats">

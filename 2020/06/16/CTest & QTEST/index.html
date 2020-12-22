@@ -39,7 +39,7 @@
 <meta property="og:description" content="本文会介绍一下QTest和GTest的一些功能和区别。">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-06-16T15:11:40.000Z">
-<meta property="article:modified_time" content="2020-11-17T07:55:50.204Z">
+<meta property="article:modified_time" content="2020-12-22T05:40:59.638Z">
 <meta property="article:author" content="小竹">
 <meta property="article:tag" content="Qt">
 <meta property="article:tag" content="C++">
@@ -78,7 +78,7 @@
 
     <!-- custom head -->
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
+<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
 </head>
 
     <body>
@@ -245,7 +245,7 @@
     </div>
     <script>
         (() => {
-            var update = Date.parse("2020-11-17"),
+            var update = Date.parse("2020-12-22"),
                 date = new Date(),
                 now = date.getTime(),
                 expire = now - update,
@@ -270,7 +270,6 @@
 <p>使用方法：</p>
 <p>在CMakeLists.txt使用include(CTest)和include(Dart)来导入CTest模块和开启ctest。使用add_test()来添加一个测试程序，测试程序是一个普通的二进制，只不过内部运行的是qtest或者gtest编写的测试用例。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">include(CTest)</span><br><span class="line">include(Dart)</span><br><span class="line">add_executable(tests tests&#x2F;test.cpp)</span><br><span class="line">add(NAME tests COMMAND $&lt;TARGET_FILE:tests&gt;)</span><br></pre></td></tr></table></figure>
-
 <h2 id="qt-qtest"><a href="#qt-qtest" class="headerlink" title="qt qtest"></a>qt qtest</h2><p>qtest是Qt提供的单元测试框架，Qt Test是用于对基于Qt的应用程序和库进行单元测试的框架。Qt Test提供了单元测试框架中常见的所有功能以及用于测试图形用户界面的扩展。</p>
 <p>Qt测试旨在简化基于Qt的应用程序和库的单元测试的编写：</p>
 <table>
@@ -323,17 +322,13 @@
 </tbody></table>
 <h3 id="断言"><a href="#断言" class="headerlink" title="断言"></a>断言</h3><p>QVERIFY() 用于验证数据是否正确。</p>
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">QVERIFY(<span class="number">1</span> == <span class="number">1</span>);</span><br><span class="line">QVERIFY2(<span class="number">1</span> != <span class="number">1</span>, <span class="string">&quot;1不等于1&quot;</span>);</span><br></pre></td></tr></table></figure>
-
 <h3 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h3><p>QFETCH_GLOBAL() 该宏从全局数据表中的一行中获取类型类型为name的变量。 名称和类型必须与全局数据表中的列匹配。 这是断言，如果断言失败，则测试将中止。</p>
 <p>QFETCH() 宏会在堆栈上创建一个类型为name的本地变量。 名称和类型必须与测试数据表中的列匹配。 这是断言，如果断言失败，则测试将中止。</p>
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">QFETCH(QString, aString);</span><br><span class="line">QFETCH_GLOBAL(QLocale, locale);</span><br></pre></td></tr></table></figure>
-
 <h3 id="比较"><a href="#比较" class="headerlink" title="比较"></a>比较</h3><p>QCOMPARE宏用于判断两个值是否相等，如果实际值和预期值匹配，将会继续运行，否则将失败记录在测试日至中，并且测试将被终止，不会尝试任何后续操作。</p>
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">QCOMPARE(QString(<span class="string">&quot;hello&quot;</span>).toUpper(), QString(<span class="string">&quot;HELLO&quot;</span>));</span><br></pre></td></tr></table></figure>
-
 <h3 id="添加数据"><a href="#添加数据" class="headerlink" title="添加数据"></a>添加数据</h3><p>通过在包含_data()的函数中调用QTest::addColumn和QTest::newRow向测试用例增加数据，并通过QFETCH宏在测试用例中访问数据。</p>
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">TestQString::toInt_data</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    QTest::addColumn&lt;QString&gt;(<span class="string">&quot;aString&quot;</span>);</span><br><span class="line">    QTest::addColumn&lt;<span class="keyword">int</span>&gt;(<span class="string">&quot;expected&quot;</span>);</span><br><span class="line">    QTest::newRow(<span class="string">&quot;positive value&quot;</span>) &lt;&lt; <span class="string">&quot;42&quot;</span> &lt;&lt; <span class="number">42</span>;</span><br><span class="line">    QTest::newRow(<span class="string">&quot;negative value&quot;</span>) &lt;&lt; <span class="string">&quot;-42&quot;</span> &lt;&lt; <span class="number">-42</span>;</span><br><span class="line">    QTest::newRow(<span class="string">&quot;zero&quot;</span>) &lt;&lt; <span class="string">&quot;0&quot;</span> &lt;&lt; <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">TestQString::toInt</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">     QFETCH(QString, aString);</span><br><span class="line">     QFETCH(<span class="keyword">int</span>, expected);</span><br><span class="line">     QCOMPARE(aString.toInt(), expected);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <h3 id="创建测试"><a href="#创建测试" class="headerlink" title="创建测试"></a>创建测试</h3><p>要创建测试，需要派生自QObject，并添加一个或多个专用槽函数。每个专用槽函数都是测试中的一个测试功能且必须为private。函数命名方法以casen_函数名或者以test结尾的方式。</p>
 <p>使用QTest::qExec()可用于执行测试对象中的所有测试功能。</p>
 <p>此外，还可以定义不用于测试功能的专用槽函数。如果存在，它们将由测试框架执行，并用于初始化和清除整个测试或当前的测试功能。</p>
@@ -349,12 +344,10 @@
 <p>另外，可以使用RAII,并在析构函数中调用清除操作，以确保他们在测试函数返回且对象移出作用域时发生。</p>
 <p>如果initTestCase()失败，将不执行任何测试功能。如果init()失败，则不执行以下测试功能，测试将继续进行下一个测试功能。</p>
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span> :</span> <span class="keyword">public</span> QObject &#123;</span><br><span class="line">  Q_OBJECT</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">verify</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"><span class="keyword">private</span> slots:</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">initTestCase</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    qDebug() &lt;&lt; <span class="string">&quot;init test case&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">firstTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    QVERIFY(<span class="literal">true</span>);</span><br><span class="line">    QCOMPARE(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">secondTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    QVERIFY(verify());</span><br><span class="line">    QVERIFY(<span class="number">1</span> != <span class="number">2</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">cleanupTestCase</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    qDebug() &lt;&lt; <span class="string">&quot;clean test case&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
 <p>最后，如果测试类具有静态且公共的void initMain()方法，则在实例化QApplication对象之前，由QTEST_MAIN宏调用该方法。例如，这允许设置应用程序的属性，例如Qt::AA_DisableHighDpiScaling。这是在Qt5.14添加的。</p>
 <h3 id="使用CMake和CTest构建测试项目"><a href="#使用CMake和CTest构建测试项目" class="headerlink" title="使用CMake和CTest构建测试项目"></a>使用CMake和CTest构建测试项目</h3><p>CMake还有其他优点。例如，几乎可以毫不费力地使用CDash将测试运行的结果发布到Web服务器上。</p>
 <p>CTest可以扩展到非常不同的单元测试框架，并且可以与QTest一起使用。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">project(mytest LANGUAGES CXX)</span><br><span class="line">include(CTest)</span><br><span class="line">include(Dart)</span><br><span class="line">find_package(Qt5 COMPONENTS Test REQUIRED)</span><br><span class="line">set(CMAKE_INCLUDE_CURRENT_DIR ON)</span><br><span class="line">set(CMAKE_AUTOMOC ON)</span><br><span class="line">add_executable(mytest tst_mytest.cpp)</span><br><span class="line">add_test(NAME mytest COMMAND mytest)</span><br><span class="line">target_link_libraries(mytest PRIVATE Qt5::Test)</span><br></pre></td></tr></table></figure>
-
 <h2 id="google-test"><a href="#google-test" class="headerlink" title="google test"></a>google test</h2><p>google test(gtest)是google公司推出的c++单元测试框架，基于xUnit架构，并且支持Linux、Windows和mac，并且支持任何类型的测试和模拟，而不仅仅是单元测试。</p>
 <h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>当使用gtest时，通过编写断言来检查条件是否为真。断言的结果可能是成功、非致命失败或者致命失败。如果发生致命故障，将终止当前功能，否则将继续运行。</p>
 <p>一个测试套件包含一个或者多个测试。当测试套件中的多个测试需要共享通用对象和子例程时，可以将他们放入一个测试桶中。</p>
@@ -422,7 +415,6 @@
 <li>测试结果由断言确定，如果测试中的任何声明失败（致命或非致命），或者测试崩溃，整个测试都会失败，否则测试应当成功。</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">TEST(TestSuiteName, TestName) &#123;</span><br><span class="line">  ...测试代码...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>TEST()函数第一个参数是测试套件的名称，第二个参数是测试套件内的测试名称。这两个名称都必须是有效的C++标识符，并且不应包含任何下划线。来自不同测试套件的测试可以具有相同的名称。</p>
 <h1 id="参考资料："><a href="#参考资料：" class="headerlink" title="参考资料："></a>参考资料：</h1><h2 id="qtest"><a href="#qtest" class="headerlink" title="qtest"></a>qtest</h2><p><a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qtest.html">https://doc.qt.io/qt-5/qtest.html</a></p>
 <h2 id="gtest"><a href="#gtest" class="headerlink" title="gtest"></a>gtest</h2><p><a target="_blank" rel="noopener" href="https://github.com/google/googletest/blob/master/googletest/docs/primer.md">https://github.com/google/googletest/blob/master/googletest/docs/primer.md</a></p>
@@ -444,7 +436,7 @@
  
             <div class="post-footer__meta">
     <p>
-        updated at 2020-11-17
+        updated at 2020-12-22
     </p>
 </div> 
             <div class="post-meta__cats">

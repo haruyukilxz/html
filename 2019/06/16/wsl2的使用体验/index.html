@@ -41,7 +41,7 @@
 <meta property="og:image" content="https://blog.justforlxz.com/2019/06/16/wsl2%E7%9A%84%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/Snipaste_2019-06-16_21-52-42.png">
 <meta property="og:image" content="https://blog.justforlxz.com/2019/06/16/wsl2%E7%9A%84%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/Snipaste_2019-06-16_21-49-15.png">
 <meta property="article:published_time" content="2019-06-16T12:59:59.000Z">
-<meta property="article:modified_time" content="2020-11-17T07:55:50.304Z">
+<meta property="article:modified_time" content="2020-12-22T05:40:59.730Z">
 <meta property="article:author" content="小竹">
 <meta property="article:tag" content="Windows">
 <meta name="twitter:card" content="summary">
@@ -77,7 +77,7 @@
 
     <!-- custom head -->
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
+<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
 </head>
 
     <body>
@@ -242,7 +242,7 @@
     </div>
     <script>
         (() => {
-            var update = Date.parse("2020-11-17"),
+            var update = Date.parse("2020-12-22"),
                 date = new Date(),
                 now = date.getTime(),
                 expire = now - update,
@@ -260,10 +260,8 @@
 
 <p>需要Windows版本在18917及以上，先开启虚拟机平台才能继续，在管理员权限的powershell中执行</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform</span><br></pre></td></tr></table></figure>
-
 <p>对已安装的wsl1进行转换</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">wsl --set-version &lt;Distro&gt; 2</span><br></pre></td></tr></table></figure>
-
 <p>Distro可以通过 <code>wsl --list</code> 查看。</p>
 <p>转换需要点时间，完成以后就可以浪起来了。</p>
 <p>wsl2新增了一些参数：</p>
@@ -289,20 +287,14 @@
 <p>显示有关所有分发的详细信息。此命令列出每个发行版的名称，发行版所处的状态以及正在运行的版本。它还显示哪些分发是默认的星号。</p>
 <p>当一切准备就绪，我就安装了docker，测试一波。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo apt install docker-ce</span><br></pre></td></tr></table></figure>
-
 <p>添加用户到docker组。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo usermod -aG docker $USER</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo service docker --full-restart</span><br></pre></td></tr></table></figure>
-
 <p>已经可以跑docker了，我们来做个测试，请出万能的hello world！</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker pull hello-world</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run --rm hello-world</span><br></pre></td></tr></table></figure>
-
 <p>然后就看到了想要的结果，hello world成功的跑起来了。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Hello from Docker!</span><br><span class="line">This message shows that your installation appears to be working correctly.</span><br><span class="line"></span><br><span class="line">To generate this message, Docker took the following steps:</span><br><span class="line"> 1. The Docker client contacted the Docker daemon.</span><br><span class="line"> 2. The Docker daemon pulled the &quot;hello-world&quot; image from the Docker Hub.</span><br><span class="line">    (amd64)</span><br><span class="line"> 3. The Docker daemon created a new container from that image which runs the</span><br><span class="line">    executable that produces the output you are currently reading.</span><br><span class="line"> 4. The Docker daemon streamed that output to the Docker client, which sent it</span><br><span class="line">    to your terminal.</span><br><span class="line"></span><br><span class="line">To try something more ambitious, you can run an Ubuntu container with:</span><br><span class="line"> $ docker run -it ubuntu bash</span><br><span class="line"></span><br><span class="line">Share images, automate workflows, and more with a free Docker ID:</span><br><span class="line"> https:&#x2F;&#x2F;hub.docker.com&#x2F;</span><br><span class="line"></span><br><span class="line">For more examples and ideas, visit:</span><br><span class="line"> https:&#x2F;&#x2F;docs.docker.com&#x2F;get-started&#x2F;</span><br></pre></td></tr></table></figure>
-
 <p>总的来说，因为wsl2改成虚拟机方案了，不过wsl2的启动速度还是挺快的，微软也努力让wsl2和wsl1之间在使用上没有差异。目前微软还没有完成wsl2的网络部分，wsl2和宿主机之间还需要使用专门的ip进行访问，等微软完成wsl2的localhost网络以后，就可以像以前一样直接跑一些网站或者需要端口的服务了。</p>
 <img src="/2019/06/16/wsl2%E7%9A%84%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/Snipaste_2019-06-16_21-52-42.png" class="lazy" data-srcset="/2019/06/16/wsl2%E7%9A%84%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C/Snipaste_2019-06-16_21-52-42.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAABlBMVEXMzMyWlpYU2uzLAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNgAAAAAgAB9HFkpgAAAABJRU5ErkJggg==" class="" title="网络截图">
 
@@ -329,7 +321,7 @@
  
             <div class="post-footer__meta">
     <p>
-        updated at 2020-11-17
+        updated at 2020-12-22
     </p>
 </div> 
             <div class="post-meta__cats">

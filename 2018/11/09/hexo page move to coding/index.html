@@ -37,7 +37,7 @@
 <meta property="og:description" content="上周末折腾黑果子的时候，不小心被果子坑爹的磁盘管理坑了，整个home被直接改成HFS+了，本来是打算分配一个空闲分区出来的，当我新建分区以后，从空间分区开始到home，分区全部都变成HFS+了，但是… 空闲分区新建失败，提示我磁盘空间不足，我就重启进deepin打算直接新建一个算了，然后就GG几率了。在windows下看到home已经成果子的文件系统了，然后我用arch的安装盘看了一下，已经无法重">
 <meta property="og:locale">
 <meta property="article:published_time" content="2018-11-09T20:17:32.000Z">
-<meta property="article:modified_time" content="2020-11-17T07:55:50.212Z">
+<meta property="article:modified_time" content="2020-12-22T05:40:59.642Z">
 <meta property="article:author" content="小竹">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:creator" content="@justforlxz">
@@ -71,7 +71,7 @@
 
     <!-- custom head -->
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
+<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
 </head>
 
     <body>
@@ -236,7 +236,7 @@
     </div>
     <script>
         (() => {
-            var update = Date.parse("2020-11-17"),
+            var update = Date.parse("2020-12-22"),
                 date = new Date(),
                 now = date.getTime(),
                 expire = now - update,
@@ -256,25 +256,18 @@
 
 <p>首先，创建新的博客目录，用来拉取旧的数据。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir blog &amp;&amp; cd blog</span><br></pre></td></tr></table></figure>
-
 <p>初始化git目录。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
-
 <p>添加远程仓库。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git remote add origin 你的博客git地址</span><br></pre></td></tr></table></figure>
-
 <p>取回origin的backup分支，和本地master合并。因为hexo-git-backup插件只支持master，但是coding只支持master部署page服务，所以需要使用其他分支。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git pull origin backup:master</span><br></pre></td></tr></table></figure>
-
 <p>拉取了代码以后，我们需要做点其他设置，首先设置上游分支。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git branch --set-upstream-to&#x3D;origin&#x2F;backup master</span><br></pre></td></tr></table></figure>
-
 <p>设置git的默认push策略，可以参考<a target="_blank" rel="noopener" href="http://thekaiway.com/2013/07/30/config-your-git-push-strategy/">thekaiway</a>的文章。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git config push.default upstream</span><br></pre></td></tr></table></figure>
-
 <p>然后添加coding的git地址。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git remote add coding 你的git地址</span><br></pre></td></tr></table></figure>
-
 <p>之后就正常使用了，通过npm安装hexo，再安装需要的插件，最后完成了在一台新电脑上恢复hexo博客。</p>
 
             </div>
@@ -294,7 +287,7 @@
  
             <div class="post-footer__meta">
     <p>
-        updated at 2020-11-17
+        updated at 2020-12-22
     </p>
 </div> 
             <div class="post-meta__cats">

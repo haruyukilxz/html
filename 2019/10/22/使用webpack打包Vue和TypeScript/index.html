@@ -39,7 +39,7 @@
 <meta property="og:description" content="本文将会介绍如何通过Webpack将基于TypeScript的Vue项目进行打包。">
 <meta property="og:locale">
 <meta property="article:published_time" content="2019-10-22T15:20:08.000Z">
-<meta property="article:modified_time" content="2020-11-17T07:55:50.308Z">
+<meta property="article:modified_time" content="2020-12-22T05:40:59.734Z">
 <meta property="article:author" content="小竹">
 <meta property="article:tag" content="Vue">
 <meta property="article:tag" content="Webpack">
@@ -76,7 +76,7 @@
 
     <!-- custom head -->
 
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
+<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
 </head>
 
     <body>
@@ -243,7 +243,7 @@
     </div>
     <script>
         (() => {
-            var update = Date.parse("2020-11-17"),
+            var update = Date.parse("2020-12-22"),
                 date = new Date(),
                 now = date.getTime(),
                 expire = now - update,
@@ -261,47 +261,35 @@
 
 <h2 id="webpack基础配置"><a href="#webpack基础配置" class="headerlink" title="webpack基础配置"></a>webpack基础配置</h2><p>首先创建一个基本的webpack.config.js文件:</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const path &#x3D; require( &#39;path&#39; );</span><br><span class="line"></span><br><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">    entry: &#123;</span><br><span class="line">        index: &quot;.&#x2F;src&#x2F;index.ts&quot;,</span><br><span class="line">    &#125;,</span><br><span class="line">    output: &#123;</span><br><span class="line">        path: path.resolve( __dirname, &#39;dist&#39; ),</span><br><span class="line">        publicPath: &#39;&#x2F;dist&#x2F;&#39;,</span><br><span class="line">        filename: &#39;[name].js&#39;</span><br><span class="line">    &#125;,</span><br><span class="line">    devtool: &#39;inline-source-map&#39;,</span><br><span class="line">    mode: &#39;development&#39;,</span><br><span class="line">    module: &#123;</span><br><span class="line">        rules: [</span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    resolve: &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
 <p>此时webpack只能将src/index.ts文件直接输出为index.js，我们需要添加typescript的loader，进行typescript的转换。</p>
 <p>将以下代码加入rules节:</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    test: &#x2F;\.ts?$&#x2F;,</span><br><span class="line">    loader: &#39;ts-loader&#39;,</span><br><span class="line">    exclude: &#x2F;node_modules&#x2F;,</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-
 <p>通过ts-loader进行ts文件的转换，我们还需要创建typescript的一个配置文件。</p>
 <h2 id="添加typescript支持"><a href="#添加typescript支持" class="headerlink" title="添加typescript支持"></a>添加typescript支持</h2><p>创建tsconfig.json</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;compilerOptions&quot;: &#123;</span><br><span class="line">        &quot;outDir&quot;: &quot;.&#x2F;dist&#x2F;&quot;,</span><br><span class="line">        &quot;sourceMap&quot;: true,</span><br><span class="line">        &quot;strict&quot;: true,</span><br><span class="line">        &quot;module&quot;: &quot;commonjs&quot;,</span><br><span class="line">        &quot;moduleResolution&quot;: &quot;node&quot;,</span><br><span class="line">        &quot;target&quot;: &quot;es5&quot;,</span><br><span class="line">        &quot;skipLibCheck&quot;: true,</span><br><span class="line">        &quot;esModuleInterop&quot;: true,</span><br><span class="line">        &quot;experimentalDecorators&quot;: true</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;include&quot;: [</span><br><span class="line">        &quot;.&#x2F;src&#x2F;**&#x2F;*&quot;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>还需要在webpack的配置中添加ts文件，在resolve节中添加:</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">extensions: [ &#39;.ts&#39;, &#39;.js&#39; ],</span><br></pre></td></tr></table></figure>
-
 <p>我们指定ts转换出的js代码是es5的。</p>
 <p>这个时候我们运行webpack，将会看到正常的转换输出。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Hash: c3a0ae2c47032de12eec</span><br><span class="line">Version: webpack 4.41.0</span><br><span class="line">Time: 1880ms</span><br><span class="line">Built at: 10&#x2F;22&#x2F;2019 3:40:59 PM</span><br><span class="line">   Asset      Size  Chunks             Chunk Names</span><br><span class="line">index.js  11.8 KiB   index  [emitted]  index</span><br><span class="line">Entrypoint index &#x3D; index.js</span><br><span class="line">[.&#x2F;src&#x2F;index.ts] 269 bytes &#123;index&#125; [built]</span><br></pre></td></tr></table></figure>
-
 <p>入口文件就是index.ts了，之后我们就正常的在index.ts中写我们的代码，webpack就会查找所有的依赖，并打包输出到index.js中。</p>
 <h2 id="添加Vue单文件的支持"><a href="#添加Vue单文件的支持" class="headerlink" title="添加Vue单文件的支持"></a>添加Vue单文件的支持</h2><p>Vue单文件组件(SFC)规范是指在一个文件中，提供html、css和script代码，三者包含在顶级语言块 <code>&lt;template&gt;</code>、<code>&lt;script&gt;</code> 和 <code>&lt;style&gt;</code><br> 中，还允许添加可选的自定义块。</p>
 <p>这是一个简单的vue单文件例子:</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div class&#x3D;&quot;example&quot;&gt;&#123;&#123; msg &#125;&#125;&lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">  data () &#123;</span><br><span class="line">    return &#123;</span><br><span class="line">      msg: &#39;Hello world!&#39;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style&gt;</span><br><span class="line">.example &#123;</span><br><span class="line">  color: red;</span><br><span class="line">&#125;</span><br><span class="line">&lt;&#x2F;style&gt;</span><br><span class="line"></span><br><span class="line">&lt;custom1&gt;</span><br><span class="line">  This could be e.g. documentation for the component.</span><br><span class="line">&lt;&#x2F;custom1&gt;</span><br></pre></td></tr></table></figure>
-
 <p>我们通过vue-loader来解析该文件，提取每一个语言块，如有需要，会传递给其他loader进行处理，最后组装为一个ES Module。</p>
 <p>我们在webpack的rules节中添加vue-loader:</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  test: &#x2F;\.vue$&#x2F;,</span><br><span class="line">  loader: &#39;vue-loader&#39;,</span><br><span class="line">  options: &#123;</span><br><span class="line">    loaders: &#123;</span><br><span class="line">      &#x2F;&#x2F; Since sass-loader (weirdly) has SCSS as its default parse mode, we map</span><br><span class="line">      &#x2F;&#x2F; the &quot;scss&quot; and &quot;sass&quot; values for the lang attribute to the right configs here.</span><br><span class="line">      &#x2F;&#x2F; other preprocessors should work out of the box, no loader config like this necessary.</span><br><span class="line">      &#39;scss&#39;: &#39;vue-style-loader!css-loader!sass-loader&#39;,</span><br><span class="line">      &#39;sass&#39;: &#39;vue-style-loader!css-loader!sass-loader?indentedSyntax&#39;,</span><br><span class="line">    &#125;</span><br><span class="line">    &#x2F;&#x2F; other vue-loader options go here</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-
 <h2 id="如果vue是typescript代码？"><a href="#如果vue是typescript代码？" class="headerlink" title="如果vue是typescript代码？"></a>如果vue是typescript代码？</h2><p>其实这很简单，ts-loader有一个appendTsSuffixTo的功能，可以给某个文件增加.ts的后缀，从而识别这个文件为ts文件。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  test: &#x2F;\.tsx?$&#x2F;,</span><br><span class="line">  loader: &#39;ts-loader&#39;,</span><br><span class="line">  exclude: &#x2F;node_modules&#x2F;,</span><br><span class="line">  options: &#123;</span><br><span class="line">    appendTsSuffixTo: [&#x2F;\.vue$&#x2F;],</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-
 <p>我们还需要在项目中添加一个vue-shim.d.ts来让ts正确的识别vue。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">declare module &#39;*.vue&#39; &#123;</span><br><span class="line">  import Vue from &#39;vue&#39;</span><br><span class="line">  export default Vue</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>还需要在webpack的resolve节追加vue的后缀:</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">resolve: &#123;</span><br><span class="line">  extensions: [ &#39;.tsx&#39;, &#39;.ts&#39;, &#39;.js&#39; , &#39;.vue&#39;],</span><br><span class="line">  alias: &#123;</span><br><span class="line">    &#39;vue&#39;: &#39;vue&#x2F;dist&#x2F;vue.js&#39;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-
 <p>vue-loader现在需要手动处理一下插件，在webpack.config.js的头部导入vue-loader，并在plugins节创建对象。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const &#123; VueLoaderPlugin &#125; &#x3D; require(&#39;vue-loader&#39;)</span><br><span class="line"></span><br><span class="line">.......</span><br><span class="line"></span><br><span class="line">plugins: [</span><br><span class="line">  new VueLoaderPlugin()</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
-
 <p>否则将不能正确工作。</p>
 <p>此时已经完成了webpack+vue+typescript的全部工作。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Hash: 320d4ed3f55f52872694</span><br><span class="line">Version: webpack 4.41.0</span><br><span class="line">Time: 2494ms</span><br><span class="line">Built at: 10&#x2F;22&#x2F;2019 4:00:50 PM</span><br><span class="line">      Asset       Size    Chunks             Chunk Names</span><br><span class="line">  bundle.js   1.12 MiB    bundle  [emitted]  bundle</span><br><span class="line">electron.js   12.2 KiB  electron  [emitted]  electron</span><br><span class="line"> index.html  194 bytes            [emitted]</span><br><span class="line">Entrypoint bundle &#x3D; bundle.js</span><br><span class="line">Entrypoint electron &#x3D; electron.js</span><br><span class="line">[.&#x2F;node_modules&#x2F;css-loader&#x2F;dist&#x2F;cjs.js!.&#x2F;node_modules&#x2F;vue-loader&#x2F;lib&#x2F;loaders&#x2F;stylePostLoader.js!.&#x2F;node_modules&#x2F;sass-loader&#x2F;dist&#x2F;cjs.js!.&#x2F;node_modules&#x2F;vue-loader&#x2F;lib&#x2F;index.js?!.&#x2F;src&#x2F;app.vue?vue&amp;type&#x3D;style&amp;index&#x3D;0&amp;id&#x3D;5ef48958&amp;rel&#x3D;stylesheet%2Fscss&amp;lang&#x3D;scss&amp;scoped&#x3D;true&amp;] .&#x2F;node_modules&#x2F;css-loader&#x2F;dist&#x2F;cjs.js!.&#x2F;node_modules&#x2F;vue-loader&#x2F;lib&#x2F;loaders&#x2F;stylePostLoader.js!.&#x2F;node_modules&#x2F;sass-loader&#x2F;dist&#x2F;cjs.js!.&#x2F;node_modules&#x2F;vue-loader&#x2F;lib??vue-loader-options!.&#x2F;src&#x2F;app.vue?vue&amp;type&#x3D;style&amp;index&#x3D;0&amp;id&#x3D;5ef48958&amp;rel&#x3D;stylesheet%2Fscss&amp;lang&#x3D;scss&amp;scoped&#x3D;true&amp; 542 bytes &#123;bundle&#125; [built]</span><br><span class="line">[.&#x2F;node_modules&#x2F;ts-loader&#x2F;index.js?!.&#x2F;node_modules&#x2F;vue-loader&#x2F;lib&#x2F;index.js?!.&#x2F;src&#x2F;Components&#x2F;About.vue?vue&amp;type&#x3D;script&amp;lang&#x3D;ts&amp;] .&#x2F;node_modules&#x2F;ts-loader??ref--1!.&#x2F;node_modules&#x2F;vue-loader&#x2F;lib??vue-loader-options!.&#x2F;src&#x2F;Components&#x2F;About.vue?vue&amp;type&#x3D;script&amp;lang&#x3D;ts&amp; 305 bytes &#123;bundle&#125; [built]</span><br><span class="line">[.&#x2F;node_modules&#x2F;vue-loader&#x2F;lib&#x2F;loaders&#x2F;templateLoader.js?!.&#x2F;node_modules&#x2F;vue-loader&#x2F;lib&#x2F;index.js?!.&#x2F;src&#x2F;Components&#x2F;About.vue?vue&amp;type&#x3D;template&amp;id&#x3D;aa9c95a6&amp;] .&#x2F;node_modules&#x2F;vue-loader&#x2F;lib&#x2F;loaders&#x2F;templateLoader.js??vue-loader-options!.&#x2F;node_modules&#x2F;vue-loader&#x2F;lib??vue-loader-options!.&#x2F;src&#x2F;Components&#x2F;About.vue?vue&amp;type&#x3D;template&amp;id&#x3D;aa9c95a6&amp; 235 bytes &#123;bundle&#125; [built]</span><br><span class="line">[.&#x2F;node_modules&#x2F;vue-loader&#x2F;lib&#x2F;loaders&#x2F;templateLoader.js?!.&#x2F;node_modules&#x2F;vue-loader&#x2F;lib&#x2F;index.js?!.&#x2F;src&#x2F;app.vue?vue&amp;type&#x3D;template&amp;id&#x3D;5ef48958&amp;scoped&#x3D;true&amp;] .&#x2F;node_modules&#x2F;vue-loader&#x2F;lib&#x2F;loaders&#x2F;templateLoader.js??vue-loader-options!.&#x2F;node_modules&#x2F;vue-loader&#x2F;lib??vue-loader-options!.&#x2F;src&#x2F;app.vue?vue&amp;type&#x3D;template&amp;id&#x3D;5ef48958&amp;scoped&#x3D;true&amp; 589 bytes &#123;bundle&#125; [built]</span><br><span class="line">[.&#x2F;node_modules&#x2F;vue-style-loader&#x2F;index.js!.&#x2F;node_modules&#x2F;css-loader&#x2F;dist&#x2F;cjs.js!.&#x2F;node_modules&#x2F;vue-loader&#x2F;lib&#x2F;loaders&#x2F;stylePostLoader.js!.&#x2F;node_modules&#x2F;sass-loader&#x2F;dist&#x2F;cjs.js!.&#x2F;node_modules&#x2F;vue-loader&#x2F;lib&#x2F;index.js?!.&#x2F;src&#x2F;app.vue?vue&amp;type&#x3D;style&amp;index&#x3D;0&amp;id&#x3D;5ef48958&amp;rel&#x3D;stylesheet%2Fscss&amp;lang&#x3D;scss&amp;scoped&#x3D;true&amp;] .&#x2F;node_modules&#x2F;vue-style-loader!.&#x2F;node_modules&#x2F;css-loader&#x2F;dist&#x2F;cjs.js!.&#x2F;node_modules&#x2F;vue-loader&#x2F;lib&#x2F;loaders&#x2F;stylePostLoader.js!.&#x2F;node_modules&#x2F;sass-loader&#x2F;dist&#x2F;cjs.js!.&#x2F;node_modules&#x2F;vue-loader&#x2F;lib??vue-loader-options!.&#x2F;src&#x2F;app.vue?vue&amp;type&#x3D;style&amp;index&#x3D;0&amp;id&#x3D;5ef48958&amp;rel&#x3D;stylesheet%2Fscss&amp;lang&#x3D;scss&amp;scoped&#x3D;true&amp; 1.64 KiB &#123;bundle&#125; [built]</span><br><span class="line">[.&#x2F;src&#x2F;Components&#x2F;About.vue] 1.06 KiB &#123;bundle&#125; [built]</span><br><span class="line">[.&#x2F;src&#x2F;Components&#x2F;About.vue?vue&amp;type&#x3D;script&amp;lang&#x3D;ts&amp;] 350 bytes &#123;bundle&#125; [built]</span><br><span class="line">[.&#x2F;src&#x2F;Components&#x2F;About.vue?vue&amp;type&#x3D;template&amp;id&#x3D;aa9c95a6&amp;] 203 bytes &#123;bundle&#125; [built]</span><br><span class="line">[.&#x2F;src&#x2F;app.vue] 1.08 KiB &#123;bundle&#125; [built]</span><br><span class="line">[.&#x2F;src&#x2F;app.vue?vue&amp;type&#x3D;style&amp;index&#x3D;0&amp;id&#x3D;5ef48958&amp;rel&#x3D;stylesheet%2Fscss&amp;lang&#x3D;scss&amp;scoped&#x3D;true&amp;] 716 bytes &#123;bundle&#125; [built]</span><br><span class="line">[.&#x2F;src&#x2F;app.vue?vue&amp;type&#x3D;template&amp;id&#x3D;5ef48958&amp;scoped&#x3D;true&amp;] 207 bytes &#123;bundle&#125; [built]</span><br><span class="line">[.&#x2F;src&#x2F;entry.ts] 538 bytes &#123;bundle&#125; [built]</span><br><span class="line">[.&#x2F;src&#x2F;main.ts] 1.11 KiB &#123;electron&#125; [built]</span><br><span class="line">[.&#x2F;src&#x2F;route.ts] 1.35 KiB &#123;bundle&#125; [built]</span><br></pre></td></tr></table></figure>
-
             </div>
             
     <div class="post__license">
@@ -319,7 +307,7 @@
  
             <div class="post-footer__meta">
     <p>
-        updated at 2020-11-17
+        updated at 2020-12-22
     </p>
 </div> 
             <div class="post-meta__cats">
