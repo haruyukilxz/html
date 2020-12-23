@@ -212,6 +212,35 @@
                     <div class="post-entry__header"></div>
 <div class="post-entry__content">
     <h2 class="post-entry__title">
+        SAOUTILS
+    </h2>
+    
+        <p>
+            鼠标手势还没想好要怎么实现，流程无法完全确认，这项稍后再做。
+主界面有两层构成，半透明全屏黑色背景和菜单。
+菜单较为复杂，除了左边是一个大面板，其他部分全部都可以使用一种方式实现。使用Qt的QAbstractItemDelegate、QListView来做列表...
+        </p>
+    
+</div>
+<div class="post-entry__meta">
+    <a href="/archives/2017/07/" class="post-meta__date button">
+    2017-07-04
+</a>
+    
+ 
+</div>
+<div class="post-entry__tags">
+    
+        <a href="/tags/linux/" class="post-tags__link button"># linux</a>
+    
+</div> 
+<a href="/2017/07/04/SAOUTILS/" class="post-entry__link">Link</a>
+                </div>
+            
+                <div class='post-entry content-card'>
+                    <div class="post-entry__header"></div>
+<div class="post-entry__content">
+    <h2 class="post-entry__title">
         Topbar
     </h2>
     
@@ -314,41 +343,6 @@
     
 </div> 
 <a href="/2016/05/31/docker-aria2c/" class="post-entry__link">Link</a>
-                </div>
-            
-                <div class='post-entry content-card'>
-                    <div class="post-entry__header"></div>
-<div class="post-entry__content">
-    <h2 class="post-entry__title">
-        aria2配置
-    </h2>
-    
-        <p>安装好aria2，然后执行一下内容</p>
-<pre><code>$ sudo nano /etc/systemd/user/aria2.service  
-
-[Unit]
-Description=Aria2 Service
-After=network.target
-
-[Service]
-ExecStart=/usr/bin/aria2c --enable-rpc --rpc-listen-all=true   --rpc-secret=secret  --rpc-allow-origin-all  --conf-path=/home/用户名字/.config/aria2/aria2.conf  --input-file /home/用户名字/.config/aria2/session.lock --disk-cache=100M --max-overall-download-limit=0  --split=10 --max-connection-per-server=10 --max-concurrent-downloads=4   --dir=/home/用户名字/Downloads/
-[Install]
-WantedBy=default.target</code></pre>
-    
-</div>
-<div class="post-entry__meta">
-    <a href="/archives/2016/05/" class="post-meta__date button">
-    2016-05-25
-</a>
-    
- 
-</div>
-<div class="post-entry__tags">
-    
-        <a href="/tags/%E6%95%99%E7%A8%8B/" class="post-tags__link button"># 教程</a>
-    
-</div> 
-<a href="/2016/05/25/aria2%E9%85%8D%E7%BD%AE/" class="post-entry__link">Link</a>
                 </div>
             
         
