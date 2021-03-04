@@ -31,15 +31,15 @@
 
     <!-- OpenGraph -->
  
-    <meta name="description" content="Arch 使用的是 pacman 包管理器，包格式是 tar.zst。Arch 提供了一些工具用于创建 tar.zst 包，首先需要安装 base-devel 包和 dev-tools 包。 pacman -S base-devel dev-tools Arch 的打包流程是这样的，要先写一个 PKGBUILD 文件，这个文件描述了构建一个包所需的全部信息，如从哪里下载源码，依赖有哪些，构建的版本">
+    <meta name="description" content="Arch 使用的是 pacman 包管理器，包格式是 tar.zst。Arch 提供了一些工具用于创建 tar.zst 包，首先需要安装 base-devel 包和 devtools 包。 pacman -S base-devel devtools Arch 的打包流程是这样的，要先写一个 PKGBUILD 文件，这个文件描述了构建一个包所需的全部信息，如从哪里下载源码，依赖有哪些，构建的版本是多">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何给Arch打一个包">
 <meta property="og:url" content="https://blog.justforlxz.com/2021/03/04/package-manager-for-arch/index.html">
 <meta property="og:site_name" content="小竹&#39;s blog">
-<meta property="og:description" content="Arch 使用的是 pacman 包管理器，包格式是 tar.zst。Arch 提供了一些工具用于创建 tar.zst 包，首先需要安装 base-devel 包和 dev-tools 包。 pacman -S base-devel dev-tools Arch 的打包流程是这样的，要先写一个 PKGBUILD 文件，这个文件描述了构建一个包所需的全部信息，如从哪里下载源码，依赖有哪些，构建的版本">
+<meta property="og:description" content="Arch 使用的是 pacman 包管理器，包格式是 tar.zst。Arch 提供了一些工具用于创建 tar.zst 包，首先需要安装 base-devel 包和 devtools 包。 pacman -S base-devel devtools Arch 的打包流程是这样的，要先写一个 PKGBUILD 文件，这个文件描述了构建一个包所需的全部信息，如从哪里下载源码，依赖有哪些，构建的版本是多">
 <meta property="og:locale">
 <meta property="article:published_time" content="2021-03-04T11:23:42.000Z">
-<meta property="article:modified_time" content="2021-03-04T07:40:49.317Z">
+<meta property="article:modified_time" content="2021-03-04T07:48:02.351Z">
 <meta property="article:author" content="小竹">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary">
@@ -252,8 +252,8 @@
     </script>
 </div>
             <div class="post__content">
-                <p>Arch 使用的是 pacman 包管理器，包格式是 tar.zst。Arch 提供了一些工具用于创建 tar.zst 包，首先需要安装 base-devel 包和 dev-tools 包。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pacman -S base-devel dev-tools</span><br></pre></td></tr></table></figure>
+                <p>Arch 使用的是 pacman 包管理器，包格式是 tar.zst。Arch 提供了一些工具用于创建 tar.zst 包，首先需要安装 base-devel 包和 devtools 包。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pacman -S base-devel devtools</span><br></pre></td></tr></table></figure>
 <p>Arch 的打包流程是这样的，要先写一个 PKGBUILD 文件，这个文件描述了构建一个包所需的全部信息，如从哪里下载源码，依赖有哪些，构建的版本是多少，如何进行构建等。</p>
 <h1 id="PKGBUILD"><a href="#PKGBUILD" class="headerlink" title="PKGBUILD"></a>PKGBUILD</h1><p>一个基本的 PKGBUILD 格式如下：</p>
 <figure class="highlight text"><table><tr><td class="code"><pre><span class="line"># Maintainer: justforlxz &lt;justforlxz@gmail.com&gt;</span><br><span class="line"></span><br><span class="line">pkgname=dtkcore-git</span><br><span class="line">pkgver=5.4.0.r1.ge7e7a99</span><br><span class="line">pkgrel=1</span><br><span class="line">pkgdesc=&#x27;DTK core modules&#x27;</span><br><span class="line">arch=(&#x27;x86_64&#x27;)</span><br><span class="line">url=&quot;https://github.com/linuxdeepin/dtkcore&quot;</span><br><span class="line">license=(&#x27;LGPL3&#x27;)</span><br><span class="line">depends=(&#x27;dconf&#x27; &#x27;deepin-desktop-base-git&#x27; &#x27;python&#x27; &#x27;gsettings-qt&#x27; &#x27;lshw&#x27;)</span><br><span class="line">makedepends=(&#x27;git&#x27; &#x27;qt5-tools&#x27; &#x27;gtest&#x27;)</span><br><span class="line">conflicts=(&#x27;dtkcore&#x27;)</span><br><span class="line">provides=(&#x27;dtkcore&#x27;)</span><br><span class="line">groups=(&#x27;deepin-git&#x27;)</span><br><span class="line">source=(&quot;$pkgname::git://github.com/linuxdeepin/dtkcore.git&quot;)</span><br><span class="line">sha512sums=(&#x27;SKIP&#x27;)</span><br><span class="line"></span><br><span class="line">pkgver() &#123;</span><br><span class="line">    cd $pkgname</span><br><span class="line">    git describe --long --tags | sed &#x27;s/\([^-]*-g\)/r\1/;s/-/./g&#x27;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">build() &#123;</span><br><span class="line">  cd $pkgname</span><br><span class="line">  qmake-qt5 PREFIX=/usr DTK_VERSION=$pkgver LIB_INSTALL_DIR=/usr/lib</span><br><span class="line">  make</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">package() &#123;</span><br><span class="line">  cd $pkgname</span><br><span class="line">  make INSTALL_ROOT=&quot;$pkgdir&quot; install</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
