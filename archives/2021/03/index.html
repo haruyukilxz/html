@@ -21,27 +21,22 @@
     <!-- meta -->
 
 
-<title>deepin git version | 小竹&#39;s blog</title>
+<title>Archive: 2021/3 | 小竹&#39;s blog</title>
 
-
-    <meta name="keywords" content="Linux">
 
 
 
 
     <!-- OpenGraph -->
  
-    <meta name="description" content="This repository only provides the git version of deepin. You can replace the deepin group in the community by installing the deepin-git group.">
-<meta property="og:type" content="article">
-<meta property="og:title" content="deepin git version">
-<meta property="og:url" content="https://blog.justforlxz.com/2020/09/06/deepin-git-version/index.html">
+    <meta name="description" content="小竹的博客">
+<meta property="og:type" content="website">
+<meta property="og:title" content="小竹&#39;s blog">
+<meta property="og:url" content="https://blog.justforlxz.com/archives/2021/03/index.html">
 <meta property="og:site_name" content="小竹&#39;s blog">
-<meta property="og:description" content="This repository only provides the git version of deepin. You can replace the deepin group in the community by installing the deepin-git group.">
+<meta property="og:description" content="小竹的博客">
 <meta property="og:locale">
-<meta property="article:published_time" content="2020-09-06T12:51:08.000Z">
-<meta property="article:modified_time" content="2021-03-04T07:40:49.297Z">
 <meta property="article:author" content="小竹">
-<meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:creator" content="@justforlxz">
 
@@ -60,13 +55,6 @@
 
 
     
-    
-        <link rel="stylesheet" id="hl-default-theme" href="/css/highlight/default.css" media="none" onload="if(getComputedStyle(document.documentElement).getPropertyValue('--color-mode').indexOf('dark')===-1)this.media='all'">
-        
-            <link rel="stylesheet" id="hl-dark-theme" href="/css/highlight/dark.css" media="none" onload="if(getComputedStyle(document.documentElement).getPropertyValue('--color-mode').indexOf('dark')!==-1)this.media='all'">
-        
-    
-
     
     
 
@@ -200,130 +188,64 @@
 </header>
 
 
-            <main class="main">
-    
-<div class="post-title">
-    <h1 class="post-title__text">
-        deepin git version
-    </h1>
-    <div class="post-title__meta">
-        <a href="/archives/2020/09/" class="post-meta__date button">
-    2020-09-06
-</a>
-        
-    <span class="separate-dot"></span><a href="/categories/%E6%8A%80%E6%9C%AF/" class="button">技术</a>
-
- 
-        
-    
-    
-
-
- 
-
- 
-    </div>
-</div>
-
-
-    <div class="post__with-side">
-        <aside class="post-side">
-            <div class="post-side__toc">
-                
-            </div>
-        </aside>
-        <article class="post content-card">
-            <div class="post__header">
-    <div class="post__expire" id="post-expired-notify">
-        <p>
-            This article was last updated on <span id="expire-date"></span> days ago, the information described in the article may be outdated.
-        </p>
-    </div>
-    <script>
-        (() => {
-            var update = Date.parse("2021-03-04"),
-                date = new Date(),
-                now = date.getTime(),
-                expire = now - update,
-                expire_days = Math.floor(expire/(24*3600*1000));
-            if (expire_days >= 120) {
-                document.querySelectorAll('#expire-date')[0].innerHTML = expire_days;
-                document.querySelectorAll('#post-expired-notify')[0].style.display = 'block';
-            }
-        })();
-    </script>
-</div>
-            <div class="post__content">
-                <p>This repository only provides the git version of deepin. You can replace the deepin group in the community by installing the deepin-git group.</p>
-<a id="more"></a>
-
-<p>The PKGBUILD for all packages are there <a target="_blank" rel="noopener" href="https://github.com/justforlxz/deepin-git-repo">https://github.com/justforlxz/deepin-git-repo</a>, Each branch saves the corresponding software.</p>
-<p>Before adding this repository, you should first add the key used to sign the packages in it. You can do this by running the following commands:</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">wget -qO - https://packages.justforlxz.com/deepingit.asc \</span><br><span class="line">    | sudo pacman-key --add -</span><br></pre></td></tr></table></figure>
-<p>It is recommended that you now fingerprint it by running</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo pacman-key --finger DCAF15B4605D5BEB</span><br></pre></td></tr></table></figure>
-<p>and in a final step, you have to locally sign the key to trust it via</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo pacman-key --lsign-key DCAF15B4605D5BEB</span><br></pre></td></tr></table></figure>
-<p>More infos on this process can be found at <a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Pacman/Package_signing#Adding_unofficial_keys">https://wiki.archlinux.org/index.php/Pacman/Package_signing#Adding_unofficial_keys</a>. You can now add the repository by editing /etc/pacman.conf and adding</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[deepingit]</span><br><span class="line">Server = https://packages.justforlxz.com/</span><br></pre></td></tr></table></figure>
-<p>at the end of the file. See <a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Pacman#Repositories_and_mirrors">https://wiki.archlinux.org/index.php/Pacman#Repositories_and_mirrors</a> for details.</p>
-<p>to install deepin git version:</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo pacman -Syy deepin-git</span><br></pre></td></tr></table></figure>
-<p>If you don’t want to use the repository anymore, you can uninstall deepin git, or install the deepin group in Community.</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo pacman -Rscn deepin-git</span><br></pre></td></tr></table></figure>
-<p>to install deepin group for community.</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo pacman -S deepin</span><br></pre></td></tr></table></figure>
-            </div>
+    <div class="cover">
+        <div class="cover__logo">
             
-    <div class="post__license">
-        <p>
-            <strong>Author: </strong>lxz
-        </p>
-        <p>
-            <strong>
-                Permalink: 
-            </strong>
-            <a href="https://blog.justforlxz.com/2020/09/06/deepin-git-version/">https://blog.justforlxz.com/2020/09/06/deepin-git-version/</a>
-        </p>
+                <h1>小竹's blog</h1>
+            
+        </div>
+        
+        
+            <div class="cover__intro">
+                <p>永远不要停止思考</p>
+ 
+            </div>
         
     </div>
+
+            
+<main class='main'>
+    
+		
+    <div class="posts">
+        
+            
+                <div class='post-entry content-card'>
+                    <div class="post-entry__header"></div>
+<div class="post-entry__content">
+    <h2 class="post-entry__title">
+        如何给Arch打一个包
+    </h2>
+    
+        <p>
+            Arch 使用的是 pacman 包管理器，包格式是 tar.zst。Arch 提供了一些工具用于创建 tar.zst 包，首先需要安装 base-devel 包和 dev-tools 包。
+
+        </p>
+    
+</div>
+<div class="post-entry__meta">
+    <a href="/archives/2021/03/" class="post-meta__date button">
+    2021-03-04
+</a>
+    
  
-            <div class="post-footer__meta">
-    <p>
-        updated at 2021-03-04
-    </p>
-</div> 
-            <div class="post-meta__cats">
-    
-        <a href="/categories/%E6%8A%80%E6%9C%AF/" class="post-cats__link button">技术</a>
-    
+</div>
+<div class="post-entry__tags">
     
         <a href="/tags/Linux/" class="post-tags__link button"># Linux</a>
     
 </div> 
-        </article>
-        
-            <div class="post__comments content-card" id="comment">
-                
-    <h4>Comments</h4>
-    
-    
-    
-    <div id="valine_container" class="valine_thread"></div>
-
-    
-    
-    
-    
-    
-    
-
-
-            </div>
+<a href="/2021/03/04/package-manager-for-arch/" class="post-entry__link">Link</a>
+                </div>
+            
         
     </div>
+    
+        
+    
 
 
+	
 </main>
 
             <footer class="footer">
@@ -434,58 +356,6 @@
 
  
 
-
-    
-
-    
-    
-    
-    <script>
-        function loadComment() {
-            let e;
-            (e = document.createElement("script")).src = 'https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js',
-            document.body.appendChild(e);
-            e.onload = () => {
-                var valineConfig = {"appId":"jwJxh95ly6NdjTRluyKYXm6G-gzGzoHsz","appKey":"lagqr7doy2slbm7oAMGoogpg","placeholder":null,"path":null,"avatar":null,"meta":["nick","mail","link"],"pageSize":null,"lang":null,"visitor":null,"highlight":null,"avatarForce":null,"recordIP":null,"serverURLs":"https://jwjxh95l.lc-cn-n1-shared.com","enableQQ":null,"requiredFields":["nick","mail"],"emojiCDN":null,"emojiMaps":null};
-                valineConfig.el = '#valine_container';
-                for (var i in valineConfig) {
-                    if (valineConfig[i] === null) delete valineConfig[i];
-                }
-                new Valine(valineConfig);
-            };
-        }
-    
-        var runningOnBrowser = typeof window !== "undefined";
-        var isBot = runningOnBrowser && !("onscroll" in window) || typeof navigator !== "undefined" && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent);
-        var supportsIntersectionObserver = runningOnBrowser && "IntersectionObserver" in window;
-    
-        setTimeout(function () {
-            if (!isBot && supportsIntersectionObserver) {
-                var comment_observer = new IntersectionObserver(function(entries) {
-                    if (entries[0].isIntersecting) {
-                        loadComment();
-                        comment_observer.disconnect();
-                    }
-                }, { threshold: [0] });
-                comment_observer.observe(document.getElementById('comment'));
-            } else {
-                loadComment();
-            }
-        }, 1);
-    </script>
-
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
 
 
 
