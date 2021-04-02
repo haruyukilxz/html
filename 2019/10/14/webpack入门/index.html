@@ -39,7 +39,7 @@
 <meta property="og:description" content="现在前端开发不像以前一样，只需要写html、css和javascript文件就可以了。现代前端开发讲究工程化。 什么是工程化？ 工程化即系统化、模块化、规范化的一个过程。 为什么要工程化？ 工程化是让开发、测试和维护都变得更加可靠和提高效率的方式。  制定规范 版本管理 单元测试 自动化  通过制定流程的方式，规范了开发和测试的流程，让工作有章可循，方便团队协作。">
 <meta property="og:locale">
 <meta property="article:published_time" content="2019-10-14T15:34:52.000Z">
-<meta property="article:modified_time" content="2021-04-02T07:39:48.271Z">
+<meta property="article:modified_time" content="2021-04-02T07:42:06.109Z">
 <meta property="article:author" content="小竹">
 <meta property="article:tag" content="Web">
 <meta name="twitter:card" content="summary">
@@ -74,7 +74,7 @@
 
     <!-- custom head -->
 
-<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
 </head>
 
     <body>
@@ -268,7 +268,7 @@
 <li>自动化</li>
 </ol>
 <p>通过制定流程的方式，规范了开发和测试的流程，让工作有章可循，方便团队协作。</p>
-<a id="more"></a>
+<span id="more"></span>
 
 <p>最初的网页开发，是写好几份的javascript代码和css文件，手动在html中引入的。这样不适合多人协作开发，一旦开发人员多了，不可避免的会造成文件和命名冲突。<br>为了避免这些事情的发生，javascript增加了模块的概念。</p>
 <p>有好的事情出现，就会有坏的事情发生。</p>
@@ -284,15 +284,19 @@
 <p>入口决定了webpack要从哪个文件开始构建依赖图。</p>
 <p>看一个简单的例子:</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">    entry: &#39;.&#x2F;src&#x2F;index.js&#39;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>output则决定了webpack会在哪里输出生成的bundles，以及如何命名这些bundles。输出目录默认为 <code>./dist/</code> 。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const path &#x3D; require(&#39;path&#39;);</span><br><span class="line"></span><br><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">    entry: &#39;.&#x2F;src&#x2F;index.js&#39;,</span><br><span class="line">    output: &#123;</span><br><span class="line">        path: path.resolve(__dirname, &#39;dist&#39;),</span><br><span class="line">        filename: &#39;bundle.js&#39;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>loader可以让webpack打包非javascript文件，loader可以将所有类型的文件转换为webpack可以识别的有效模块，然后利用webpack的打包能力，对他们进行处理。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const path &#x3D; require(&#39;path&#39;);</span><br><span class="line"></span><br><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">    entry: &#39;.&#x2F;src&#x2F;index.js&#39;,</span><br><span class="line">    output: &#123;</span><br><span class="line">        path: path.resolve(__dirname, &#39;dist&#39;),</span><br><span class="line">        filename: &#39;bundle.js&#39;</span><br><span class="line">    &#125;,</span><br><span class="line">    module: &#123;</span><br><span class="line">        rules: &#123;</span><br><span class="line">            test: &#x2F;\.css$&#x2F;,</span><br><span class="line">            use: &#39;css-loader&#39;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>rules中的意思是，当require()/impot中被解析为.css的路径时，先使用css-loader转换一下。</p>
 <p>我们可以开发新的loader去加载不同的文件，最终都通过webpack来打包到一起。</p>
 <p>loader用于转换某些类型的模块，插件则工作的更加广泛。插件的范围包括，从打包优化和压缩，一直到重新定义环境中的变量。插件接口功能极其强大，可以用来处理各种各样的任务。</p>
 <p>想要使用一个插件，你只需要 require() 它，然后把它添加到 plugins 数组中。多数插件可以通过选项(option)自定义。你也可以在一个配置文件中因为不同目的而多次使用同一个插件，这时需要通过使用 new 操作符来创建它的一个实例。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const path &#x3D; require(&#39;path&#39;);</span><br><span class="line">const HtmlWebpackPlugin &#x3D; require(&#39;html-webpack-plugin&#39;); &#x2F;&#x2F; 通过 npm 安装</span><br><span class="line">const webpack &#x3D; require(&#39;webpack&#39;);</span><br><span class="line"></span><br><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">    entry: &#39;.&#x2F;src&#x2F;index.js&#39;,</span><br><span class="line">    output: &#123;</span><br><span class="line">        path: path.resolve(__dirname, &#39;dist&#39;),</span><br><span class="line">        filename: &#39;bundle.js&#39;</span><br><span class="line">    &#125;,</span><br><span class="line">    module: &#123;</span><br><span class="line">        rules: &#123;</span><br><span class="line">            test: &#x2F;\.css$&#x2F;,</span><br><span class="line">            use: &#39;css-loader&#39;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    plugins: [</span><br><span class="line">        new HtmlWebpackPlugin(&#123;template: &#39;.&#x2F;src&#x2F;index.html&#39;&#125;)</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过webpack，我们可以将整个项目都打包为一个文件进行分发，而且还可以进行优化。webpack的出现，将前端的开发和发布彻底的分离开，开发人员可以以各种方式进行开发，通过webpack打包以后输出部署需要的文件。</p>
 
             </div>

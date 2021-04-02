@@ -62,7 +62,7 @@
 
     <!-- custom head -->
 
-<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
 </head>
 
     <body>
@@ -298,7 +298,8 @@
     </h2>
     
         <p>该项目是将aria2c封装进docker并提供服务。</p>
-<pre><code>docker pull kirigayakazushin/docker-aria2c</code></pre>
+<pre><code>docker pull kirigayakazushin/docker-aria2c
+</code></pre>
     
 </div>
 <div class="post-entry__meta">
@@ -333,7 +334,8 @@ After=network.target
 [Service]
 ExecStart=/usr/bin/aria2c --enable-rpc --rpc-listen-all=true   --rpc-secret=secret  --rpc-allow-origin-all  --conf-path=/home/用户名字/.config/aria2/aria2.conf  --input-file /home/用户名字/.config/aria2/session.lock --disk-cache=100M --max-overall-download-limit=0  --split=10 --max-connection-per-server=10 --max-concurrent-downloads=4   --dir=/home/用户名字/Downloads/
 [Install]
-WantedBy=default.target</code></pre>
+WantedBy=default.target
+</code></pre>
     
 </div>
 <div class="post-entry__meta">

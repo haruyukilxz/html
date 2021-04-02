@@ -37,7 +37,7 @@
 <meta property="og:description" content="自己搭了一个仓库，提供deepin-topbar及相关依赖的包。 I created a repository,provide deepin-topbar and dependencies.">
 <meta property="og:locale">
 <meta property="article:published_time" content="2017-07-20T13:37:51.000Z">
-<meta property="article:modified_time" content="2021-04-02T07:39:48.203Z">
+<meta property="article:modified_time" content="2021-04-02T07:42:06.033Z">
 <meta property="article:author" content="小竹">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:creator" content="@justforlxz">
@@ -71,7 +71,7 @@
 
     <!-- custom head -->
 
-<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
 </head>
 
     <body>
@@ -251,14 +251,16 @@
             <div class="post__content">
                 <p>自己搭了一个仓库，提供deepin-topbar及相关依赖的包。</p>
 <p>I created a repository,provide deepin-topbar and dependencies.</p>
-<a id="more"></a>
+<span id="more"></span>
 
 <p>也许需要安装dirmngr</p>
 <p>maybe you need install dirmngr</p>
 <h1 id="追加内容到-etc-apt-sources-list"><a href="#追加内容到-etc-apt-sources-list" class="headerlink" title="追加内容到/etc/apt/sources.list"></a>追加内容到/etc/apt/sources.list</h1><p>Append content to /etc/apt/sources.list</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">deb [arch&#x3D;amd64] https:&#x2F;&#x2F;packages.mkacg.com panda main </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
 <h1 id="导入key"><a href="#导入key" class="headerlink" title="导入key"></a>导入key</h1><p>import key</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3BBF73EE77F2FB2A</span><br></pre></td></tr></table></figure>
+
 <h1 id="刷新列表，进行安装"><a href="#刷新列表，进行安装" class="headerlink" title="刷新列表，进行安装"></a>刷新列表，进行安装</h1><p>then, refresh list and install</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo apt update &amp;&amp; sudo apt install deepin-topbar </span><br></pre></td></tr></table></figure>
             </div>

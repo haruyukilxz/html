@@ -41,7 +41,7 @@
 <meta property="og:image" content="https://blog.justforlxz.com/2021/02/27/timemachine/timemachine1.png">
 <meta property="og:image" content="https://blog.justforlxz.com/2021/02/27/timemachine/finished.png">
 <meta property="article:published_time" content="2021-02-27T11:35:29.000Z">
-<meta property="article:modified_time" content="2021-04-02T07:39:48.195Z">
+<meta property="article:modified_time" content="2021-04-02T07:42:06.021Z">
 <meta property="article:author" content="小竹">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://blog.justforlxz.com/2021/02/27/timemachine/finder.png">
@@ -76,7 +76,7 @@
 
     <!-- custom head -->
 
-<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
 </head>
 
     <body>
@@ -260,13 +260,17 @@
 <h1 id="安装-avahi"><a href="#安装-avahi" class="headerlink" title="安装 avahi"></a>安装 avahi</h1><p>Avahi 是一种免费的零配置网络实现，包括用于多播 DNS / DNS-SD服务发现的系统。它可以帮助我们广播 samba 服务器，这样网络内其他机器就可以查找到 samba 服务器了。</p>
 <p>在 arch 上安装 avahi。</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pacman -S avahi</span><br></pre></td></tr></table></figure>
+
 <p>我们并不需要配置什么，直接开启服务就行了。</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl enable --now avahi-daemon</span><br></pre></td></tr></table></figure>
+
 <h1 id="配置-samba"><a href="#配置-samba" class="headerlink" title="配置 samba"></a>配置 samba</h1><p>我们还需要稍微配置一下 samba 服务，专门开辟一个用于备份的目录。</p>
 <p>修改 <code>/etc/samba/smb.conf</code>，添加一个 timemachine 的条目。</p>
 <figure class="highlight text"><table><tr><td class="code"><pre><span class="line">[timemachine]</span><br><span class="line">    comment = macos time machine backup</span><br><span class="line">    path = /home/lxz/TimeMachine</span><br><span class="line">    valid users = lxz</span><br><span class="line">    browseable = yes</span><br><span class="line">    writeable = yes</span><br><span class="line">    writelist = lxz</span><br><span class="line">    create mask = 0777</span><br><span class="line">    # 加载模块以支持AAPL拓展，注意顺序很重要！</span><br><span class="line">    vfs objects = catia fruit streams_xattr</span><br><span class="line">    # 支持aapl</span><br><span class="line">    fruit:aapl = yes</span><br><span class="line">    # 存储os x的元数据</span><br><span class="line">    fruit:metadata = stream</span><br><span class="line">    # 设置服务器在finder中的图标</span><br><span class="line">    fruit:model = MacPro</span><br><span class="line">    # 支持time machine，非常重要！</span><br><span class="line">    fruit:time machine = yes</span><br><span class="line">    # 文件清理的一些配置</span><br><span class="line">    fruit:posix_rename = yes</span><br><span class="line">    fruit:veto_appledouble = no</span><br><span class="line">    fruit:wipe_intentionally_left_blank_rfork = yes</span><br><span class="line">    fruit:delete_empty_adfiles = yes</span><br></pre></td></tr></table></figure>
+
 <p>还需要设置 smb 协议的版本和开启苹果的支持，在配置文件中查找或者添加新的，注意，这里的配置文件必须是在上面条目的上方，我推荐是放在 <code>dns proxy</code> 的下方。</p>
 <figure class="highlight text"><table><tr><td class="code"><pre><span class="line">min protocol = SMB2</span><br><span class="line">ea support = yes</span><br></pre></td></tr></table></figure>
+
 <p>然后我们重启一下 samba 和 avahi的服务。</p>
 <p>此时 TimeMachine 和 Finder 都会显示 samba 服务器了。</p>
 <img src="/2021/02/27/timemachine/finder.png" class="lazy" data-srcset="/2021/02/27/timemachine/finder.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAABlBMVEXMzMyWlpYU2uzLAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNgAAAAAgAB9HFkpgAAAABJRU5ErkJggg==" class="" title="timemachine&#x2F;finder.png">

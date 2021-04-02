@@ -39,7 +39,7 @@
 <meta property="og:description" content="samba 是一个linux下开源的SMB&#x2F;CIFS协议的免费软件，最初 SMB 协议是 Microsoft 开发的网络通讯协议，后来微软又把 SMB 改名为 CIFS（Common Internet File System），即公共 Internet 文件系统，并且加入了许多新的功能，这样一来，使得Samba具有了更强大的功能。 samba目前最大的作用是文件共享，服务器只需要提供账号和密码，就">
 <meta property="og:locale">
 <meta property="article:published_time" content="2021-02-27T10:42:53.000Z">
-<meta property="article:modified_time" content="2021-04-02T07:39:48.195Z">
+<meta property="article:modified_time" content="2021-04-02T07:42:06.021Z">
 <meta property="article:author" content="小竹">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary">
@@ -74,7 +74,7 @@
 
     <!-- custom head -->
 
-<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
 </head>
 
     <body>
@@ -258,30 +258,40 @@
 <p>除了 samba 服务，其他服务都是运行在 docker 中，所以 samba 服务需要我手动配置。</p>
 <h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>archlinux 安装 samba 服务很简单，只需要使用 pacman 安装 samba 包即可。</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pacman -S samba</span><br></pre></td></tr></table></figure>
+
 <p>安装完成以后我们就可以创建用户和配置共享目录了。</p>
 <h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><p>由于 samba 不提供配置文件，所以我们要从网上下载基本的 <a target="_blank" rel="noopener" href="https://man.archlinux.org/man/smb.conf.5">配置文件</a>。</p>
 <h2 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h2><p>我们需要先在系统创建对应的用户，以我的用户名 lxz 为例。</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">useradd -m -g users -G wheel lxz</span><br></pre></td></tr></table></figure>
+
 <h2 id="禁用用户登录"><a href="#禁用用户登录" class="headerlink" title="禁用用户登录"></a>禁用用户登录</h2><p>由于该用户只是为了权限相关的操作，所以我并没有计划使用该账户，如果需要在系统中使用该账户，则不需要进行接下来的禁用操作。</p>
 <p><strong>禁用本地登录</strong></p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">usermod --shell /usr/bin/nologin --lock lxz</span><br></pre></td></tr></table></figure>
+
 <p><strong>禁用ssh登录</strong></p>
 <p>修改 <code>/etc/ssh/sshd_config</code> ，修改 <code>AllowUsers</code>。</p>
 <h2 id="创建-samba-用户"><a href="#创建-samba-用户" class="headerlink" title="创建 samba 用户"></a>创建 samba 用户</h2><p>我们需要区分的是，尽管 samba 的用户和 Linux 系统本身的用户是同一个，但是密码则是分开存放的，我们需要使用 samba 提供的命令修改用户的密码。</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">smbpasswd -a lxz</span><br></pre></td></tr></table></figure>
+
 <p>修改密码则不使用 <code>-a</code> 参数：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">smbpasswd lxz</span><br></pre></td></tr></table></figure>
+
 <h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><p>到此，我们已经完成了基本的 samba 配置，配置文件里默认开启了用户的家目录访问，所以我们使用 smb 客户端进行登录的时候，可以直接访问家目录。</p>
 <h2 id="开启服务"><a href="#开启服务" class="headerlink" title="开启服务"></a>开启服务</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl enable smb</span><br><span class="line">systemctl start smb</span><br></pre></td></tr></table></figure>
+
 <p>使用 smbclient 可以验证本机服务。</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">smbclient -L localhost -U%</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@LXZ-MacMini ~]# smbclient -L localhost -U%</span><br><span class="line"></span><br><span class="line">	Sharename       Type      Comment</span><br><span class="line">	---------       ----      -------</span><br><span class="line">	timemachine     Disk      macos time machine backup</span><br><span class="line"><span class="meta">	IPC$</span><span class="bash">            IPC       IPC Service (Samba Server)</span></span><br><span class="line">SMB1 disabled -- no workgroup available</span><br></pre></td></tr></table></figure>
+
 <h1 id="添加其他的共享目录"><a href="#添加其他的共享目录" class="headerlink" title="添加其他的共享目录"></a>添加其他的共享目录</h1><p>除了用户家目录，我们还可以共享特定的目录。</p>
 <p>例如我创建一个 data 目录，允许任何人只读访问。</p>
 <p>修改 <code>/etc/samba/smb.conf</code> 文件，在末尾处添加配置。</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[Guests]</span><br><span class="line">  comment = Allow all users to read</span><br><span class="line">  path = /data</span><br><span class="line">  public = yes</span><br><span class="line">  only guest = yes</span><br><span class="line">  writable = no</span><br><span class="line">  printable = no</span><br></pre></td></tr></table></figure>
+
 <p>然后重启 samba 服务，使用 smbclient 验证。</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@LXZ-MacMini ~]# systemctl restart smb</span><br><span class="line">[root@LXZ-MacMini ~]# smbclient -L localhost -U%</span><br><span class="line"></span><br><span class="line">	Sharename       Type      Comment</span><br><span class="line">	---------       ----      -------</span><br><span class="line">	timemachine     Disk      macos time machine backup</span><br><span class="line">	Guests          Disk      Allow all users to read</span><br><span class="line"><span class="meta">	IPC$</span><span class="bash">            IPC       IPC Service (Samba Server)</span></span><br><span class="line">SMB1 disabled -- no workgroup available</span><br></pre></td></tr></table></figure>
+
             </div>
             
     <div class="post__license">

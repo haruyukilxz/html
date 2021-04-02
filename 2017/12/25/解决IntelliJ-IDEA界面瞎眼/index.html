@@ -39,7 +39,7 @@
 <meta property="og:description" content="今天在逛深度论坛的时候，无意间看到了有个回复，是处理IEDA字体很挫的，试了一下，效果非常棒。 我之前也试了些网上的办法，都没有解决，字体挫的根本看不了，被逼无奈跑到windows下写MOD了。">
 <meta property="og:locale">
 <meta property="article:published_time" content="2017-12-25T14:22:25.000Z">
-<meta property="article:modified_time" content="2021-04-02T07:39:48.279Z">
+<meta property="article:modified_time" content="2021-04-02T07:42:06.117Z">
 <meta property="article:author" content="小竹">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary">
@@ -74,7 +74,7 @@
 
     <!-- custom head -->
 
-<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
 </head>
 
     <body>
@@ -254,12 +254,14 @@
             <div class="post__content">
                 <p>今天在逛深度论坛的时候，无意间看到了有个回复，是处理IEDA字体很挫的，试了一下，效果非常棒。</p>
 <p>我之前也试了些网上的办法，都没有解决，字体挫的根本看不了，被逼无奈跑到windows下写MOD了。</p>
-<a id="more"></a>
+<span id="more"></span>
 
 <p><a target="_blank" rel="noopener" href="https://bbs.deepin.org/forum.php?mod=redirect&goto=findpost&ptid=150634&pid=418410&fromuid=13250">原文链接</a></p>
 <p>在/etc/profile.d/新建一个文件，用来设置java的环境变量:</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo vim &#x2F;etc&#x2F;profile.d&#x2F;z999__java_options.sh</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#!&#x2F;bin&#x2F;bash</span><br><span class="line">opts&#x3D;&quot; -Dswing.aatext&#x3D;true  -Dawt.useSystemAAFontSettings&#x3D;lcd -Djava.net.useSystemProxies&#x3D;true &quot;</span><br><span class="line">export _JAVA_OPTIONS&#x3D;&quot;&#96;echo $&#123;_JAVA_OPTIONS&#125; |sed -Ee &#39;s&#x2F;-Dawt.useSystemAAFontSettings&#x3D;\w+&#x2F;&#x2F;ig&#39;&#96; $opts&quot;</span><br></pre></td></tr></table></figure>
+
 <p>然后注销再登录，就可以看到效果了。</p>
 <p>其实这个解决办法在arch的wiki上有，只不过似乎是我写错了吧，反正是没生效，按照这种方法是可以的，就这么用吧。非常感觉@ihipop。</p>
 

@@ -39,7 +39,7 @@
 <meta property="og:description" content="该教程不能保证适用于所有人的情况。字体也不是配置，而是补充了字体。使用的是第三方的源。">
 <meta property="og:locale">
 <meta property="article:published_time" content="2016-04-08T16:54:26.000Z">
-<meta property="article:modified_time" content="2021-04-02T07:39:48.183Z">
+<meta property="article:modified_time" content="2021-04-02T07:42:06.009Z">
 <meta property="article:author" content="小竹">
 <meta property="article:tag" content="教程">
 <meta name="twitter:card" content="summary">
@@ -74,7 +74,7 @@
 
     <!-- custom head -->
 
-<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
 </head>
 
     <body>
@@ -253,7 +253,7 @@
 </div>
             <div class="post__content">
                 <p>该教程不能保证适用于所有人的情况。<br>字体也不是配置，而是补充了字体。使用的是第三方的源。</p>
-<a id="more"></a>
+<span id="more"></span>
 
 <p>打开/etc/pacman.conf文件，添加以下内容到最底部。</p>
 <pre><code>[infinality-bundle]
@@ -264,12 +264,15 @@ SigLevel = Never
 Server = http://bohoomil.com/repo/multilib/$arch
 [infinality-bundle-fonts]
 SigLevel = Never
-Server = http://bohoomil.com/repo/fonts</code></pre>
+Server = http://bohoomil.com/repo/fonts
+</code></pre>
 <p>执行安装命令:</p>
 <pre><code>sudo pacman -S infinality-bundle infinality-bundle-multilib ibfonts-meta-extended  #（用于64位系统）
-sudo pacman -S infinality-bundle ibfonts-meta-extended #（用于32位系统）</code></pre>
+sudo pacman -S infinality-bundle ibfonts-meta-extended #（用于32位系统）
+</code></pre>
 <p>如果有遇到错误，可以手动添加hosts：</p>
-<pre><code>188.226.219.173 bohoomil.com</code></pre>
+<pre><code>188.226.219.173 bohoomil.com
+</code></pre>
 <p>会出现很多冲突，选择Y，然后安装。如果中断了，重新执行安装命令。</p>
 <p>来自：<a target="_blank" rel="noopener" href="https://linux.cn/article-3019-1.html" title="如何给任意一款 Linux 发行版添加漂亮的字体-桌面应用|Linux.中国-开源社区">如何给任意一款 Linux 发行版添加漂亮的字体-桌面应用|Linux.中国-开源社区</a></p>
 

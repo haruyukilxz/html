@@ -70,7 +70,7 @@
 <meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/20200903_023112910_iOS.jpg">
 <meta property="og:image" content="https://blog.justforlxz.com/2020/09/03/use-vscode-to-remotely-develop-dde/20200903_023116260_iOS.jpg">
 <meta property="article:published_time" content="2020-09-03T11:14:38.000Z">
-<meta property="article:modified_time" content="2021-04-02T07:39:48.243Z">
+<meta property="article:modified_time" content="2021-04-02T07:42:06.073Z">
 <meta property="article:author" content="小竹">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="VS Code">
@@ -108,7 +108,7 @@
 
     <!-- custom head -->
 
-<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
 </head>
 
     <body>
@@ -291,7 +291,7 @@
 </div>
             <div class="post__content">
                 <p>本文将介绍如何使用VSCode的远程开发套件连接到Deepin主机，进行DDE和其他软件的开发与调试.</p>
-<a id="more"></a>
+<span id="more"></span>
 
 <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Visual Studio Code（简称VS Code）是一个由微软开发，同时支持Windows 、 Linux和macOS等操作系统的免费代码编辑器，它支持测试，并内置了Git 版本控制功能，同时也具有开发环境功能，例如代码补全（类似于 IntelliSense）、代码片段和代码重构等。该编辑器支持用户个性化配置，例如改变主题颜色、键盘快捷方式等各种属性和参数，同时还在编辑器中内置了扩展程序管理的功能。</p>
 <p>在VSCode出来之前，Sublime曾经是前端开发者必备的软件，它使用python作为插件运行环境，并且也拥有不少的插件，但是很遗憾的是插件不能更改界面元素，可玩性不是很高。</p>
@@ -326,7 +326,7 @@
 <p>选择Add New SSH Host添加一个服务器。</p>
 <img src="/2020/09/03/use-vscode-to-remotely-develop-dde/qcXsO8ayHXyTMr62.png" class="lazy" data-srcset="/2020/09/03/use-vscode-to-remotely-develop-dde/qcXsO8ayHXyTMr62.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAABlBMVEXMzMyWlpYU2uzLAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNgAAAAAgAB9HFkpgAAAABJRU5ErkJggg==" class="" title="图片">
 
-<p>输入ssh的命令，例如 ssh <a href="mailto:&#108;&#x78;&#x7a;&#x40;&#49;&#48;&#46;&#50;&#48;&#x2e;&#x33;&#50;&#46;&#53;&#52;">&#108;&#x78;&#x7a;&#x40;&#49;&#48;&#46;&#50;&#48;&#x2e;&#x33;&#50;&#46;&#53;&#52;</a>。</p>
+<p>输入ssh的命令，例如 ssh <a href="mailto:&#108;&#120;&#122;&#x40;&#49;&#x30;&#x2e;&#x32;&#x30;&#x2e;&#x33;&#50;&#46;&#53;&#52;">&#108;&#120;&#122;&#x40;&#49;&#x30;&#x2e;&#x32;&#x30;&#x2e;&#x33;&#50;&#46;&#53;&#52;</a>。</p>
 <img src="/2020/09/03/use-vscode-to-remotely-develop-dde/9Cla2rDtfzfsHVSh.png" class="lazy" data-srcset="/2020/09/03/use-vscode-to-remotely-develop-dde/9Cla2rDtfzfsHVSh.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAABlBMVEXMzMyWlpYU2uzLAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNgAAAAAgAB9HFkpgAAAABJRU5ErkJggg==" class="" title="图片">
 
 <p>然后选择一个保存配置的位置，一般默认选择用户家目录的.ssh目录即可。然后就提示添加成功，此时可以点击Connect按钮进行连接。</p>
@@ -373,14 +373,19 @@
 <p>我们需要进行一些调整，以便使用该配置文件进行调试。</p>
 <p>program字段是程序二进制文件的位置，一般情况下我们是要手动写好路径，但是如果项目的二进制特别多，更换配置文件就会非常麻烦，而且配置文件里写死路径也不是很方便，我查阅了CMake插件的文档，发现CMake插件提供了两个很重要的变量，可以让我们方便的查找到路径。</p>
 <figure class="highlight"><table><tr><td class="code"><pre><span class="line">&quot;program&quot;: &quot;$&#123;command:cmake.launchTargetPath&#125;&quot;</span><br></pre></td></tr></table></figure>
+
 <p>CMake插件提供了launchTargetPath的变量，它对应的是CMake插件选择的默认target，启动调试之前需要我们先选择好Target。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&quot;value&quot;: &quot;$PATH:$&#123;command:cmake.launchTargetDirectory&#125;&quot;</span><br></pre></td></tr></table></figure>
+
 <p>CMake插件还提供了launchTargetDirectory变量，用于获取程序启动所在的目录，一般需要我们指定到本次调试所需的环境变量中。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&quot;environment&quot;: [</span><br><span class="line">  &#123;</span><br><span class="line">    &quot;name&quot;: &quot;PATH&quot;,</span><br><span class="line">    &quot;value&quot;: &quot;$PATH:$&#123;command:cmake.launchTargetDirectory&#125;&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
 <p>然后我们就可以添加启动参数了。<br>args字段保存了程序启动会传递的参数列表，例如这里会给fuse传递-d和/tmp/x。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&quot;args&quot;: [</span><br><span class="line">  &quot;-d&quot;,</span><br><span class="line">  &quot;&#x2F;tmp&#x2F;x&quot;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
 <p>完整的配置如下：</p>
 <figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;(gdb) fuse&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;type&quot;</span>: <span class="string">&quot;cppdbg&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;request&quot;</span>: <span class="string">&quot;launch&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;program&quot;</span>: <span class="string">&quot;$&#123;command:cmake.launchTargetPath&#125;&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;args&quot;</span>: [</span><br><span class="line">        <span class="string">&quot;-d&quot;</span>,</span><br><span class="line">        <span class="string">&quot;/tmp/x&quot;</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">&quot;stopAtEntry&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">&quot;cwd&quot;</span>: <span class="string">&quot;$&#123;workspaceFolder&#125;&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;environment&quot;</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;PATH&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;value&quot;</span>: <span class="string">&quot;$PATH:$&#123;command:cmake.launchTargetDirectory&#125;&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">&quot;externalConsole&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">&quot;MIMode&quot;</span>: <span class="string">&quot;gdb&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;setupCommands&quot;</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">&quot;description&quot;</span>: <span class="string">&quot;为 gdb 启用整齐打印&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;text&quot;</span>: <span class="string">&quot;-enable-pretty-printing&quot;</span>,</span><br><span class="line">            <span class="attr">&quot;ignoreFailures&quot;</span>: <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h3 id="gdb调试"><a href="#gdb调试" class="headerlink" title="gdb调试"></a>gdb调试</h3><p>此时我们就可以先通过CMake插件构建整个项目，再切换到运行面板，启动调试。</p>
 <p>点击下方面板的Build按钮，构建项目。</p>
 <img src="/2020/09/03/use-vscode-to-remotely-develop-dde/FAkfeLuV4JBsc4Mx.png" class="lazy" data-srcset="/2020/09/03/use-vscode-to-remotely-develop-dde/FAkfeLuV4JBsc4Mx.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAABlBMVEXMzMyWlpYU2uzLAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNgAAAAAgAB9HFkpgAAAABJRU5ErkJggg==" class="" title="图片">

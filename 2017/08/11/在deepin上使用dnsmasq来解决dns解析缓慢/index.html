@@ -37,7 +37,7 @@
 <meta property="og:description" content="其实这个问题影响并不是很大，只是稍微的增加一点点访问速度，缓存这东西有利有弊。">
 <meta property="og:locale">
 <meta property="article:published_time" content="2017-08-11T14:07:26.000Z">
-<meta property="article:modified_time" content="2021-04-02T07:39:48.275Z">
+<meta property="article:modified_time" content="2021-04-02T07:42:06.113Z">
 <meta property="article:author" content="小竹">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:creator" content="@justforlxz">
@@ -71,7 +71,7 @@
 
     <!-- custom head -->
 
-<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
 </head>
 
     <body>
@@ -250,32 +250,41 @@
 </div>
             <div class="post__content">
                 <p>其实这个问题影响并不是很大，只是稍微的增加一点点访问速度，缓存这东西有利有弊。</p>
-<a id="more"></a>
+<span id="more"></span>
 
 <p>在写完这篇文章以后，我就不用dnsmasq了，现在用的是github上的<a target="_blank" rel="noopener" href="https://github.com/chengr28/Pcap_DNSProxy">Pcap_DNSProxy</a>。用来防止dns污染的。</p>
 <p>根据<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/11020027/dns-caching-in-linux">https://stackoverflow.com/questions/11020027/dns-caching-in-linux</a> 中回答者提供的信息来看，linux发行版是不提供dns解析缓存的，上面提到的nscd也不在deepin的预装列表中，所以我们只能自己动手丰衣足食了。</p>
 <p>首先安装口碑较好的dnsmasq，来为我们提供dns缓存。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo apt install dnsmasq</span><br></pre></td></tr></table></figure>
+
 <p>如果是deepin最新的2015.4.1版本中安装，安装结束会提醒一个错误，这个错误的解决办法来自<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/16939306/i-cant-restart-my-dnsmasq-service-so-my-fog-server-wont-work">https://stackoverflow.com/questions/16939306/i-cant-restart-my-dnsmasq-service-so-my-fog-server-wont-work</a>.<br>这个错误似乎是因为/usr/share/dns/root.ds文件更新后结构导致的错误。</p>
 <p>编辑/etc/init.d/dnsmasq，并找到</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ROOT_DS&#x3D;&quot;&#x2F;usr&#x2F;share&#x2F;dns&#x2F;root.ds&quot;</span><br><span class="line"></span><br><span class="line">if [ -f $ROOT_DS ]; then</span><br><span class="line">   DNSMASQ_OPTS&#x3D;&quot;$DNSMASQ_OPTS &#96;sed -e s&#x2F;&quot;. IN DS &quot;&#x2F;--trust-anchor&#x3D;.,&#x2F; -e s&#x2F;&quot; &quot;&#x2F;,&#x2F;g $ROOT_DS | tr &#39;\n&#39; &#39; &#39;&#96;&quot; </span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
 <p>修改为</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ROOT_DS&#x3D;&quot;&#x2F;usr&#x2F;share&#x2F;dns&#x2F;root.ds&quot;</span><br><span class="line"></span><br><span class="line">if [ -f $ROOT_DS ]; then</span><br><span class="line">   DNSMASQ_OPTS&#x3D;&quot;$DNSMASQ_OPTS &#96;sed -e s&#x2F;&quot;.*IN[[:space:]]DS[[:space:]]&quot;&#x2F;--trust-anchor&#x3D;.,&#x2F; -e s&#x2F;&quot;[[:space:]]&quot;&#x2F;,&#x2F;g $ROOT_DS | tr &#39;\n&#39; &#39; &#39;&#96;&quot; </span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
 <p>当错误解决以后，我们手动重启一下dnsmasq的systemd服务。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo systemctl restart dnsmasq</span><br></pre></td></tr></table></figure>
+
 <p>deepin的/etc/resolv.conf来自/etc/NetworkManager/resolv.conf.是一个软连接。我采取的行为是删除这个文件，重新创建。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo rm &#x2F;etc&#x2F;resolv.conf</span><br><span class="line"></span><br><span class="line">sudo vim &#x2F;etc&#x2F;resolv.conf</span><br></pre></td></tr></table></figure>
+
 <p>然后写入本地地址当做dns地址。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">nameserver 127.0.0.1</span><br></pre></td></tr></table></figure>
+
 <p>dnsmasq是一个本地的dns和dhcp服务器，当我们在上面成功启动dnsmasq以后，个人系统中就已经在提供dns服务了，所以本机使用回环地址来表明dns服务器就是本机，所有的dns查询都会发送到本机的dnsmasq中。</p>
 <p>如果需要额外添加dns服务器，做法来自<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/Dnsmasq#More_than_three_nameservers">https://wiki.archlinux.org/index.php/Dnsmasq#More_than_three_nameservers</a>.</p>
 <p>创建一个 /etc/resolv.dnsmasq.conf，写入其他dns服务器的地址。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">nameserver 114.114.114.114</span><br></pre></td></tr></table></figure>
+
 <p>然后编辑 /etc/dnsmasq.conf,找到resolv-file字段，改为</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">resolv-file&#x3D;&#x2F;etc&#x2F;resolv.dnsmasq.conf</span><br></pre></td></tr></table></figure>
+
 <p>然后重启dnsmasq。</p>
 <p>验证的话通过dig命令。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">dig blog.mkacg.com</span><br></pre></td></tr></table></figure>
+
 <p>通过执行两次来判断，Query time在第二次查询是为0 msec。</p>
 
             </div>

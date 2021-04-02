@@ -37,7 +37,7 @@
 <meta property="og:description" content="排查了一天，最后终于确认了流程，知道了问题所在，不得不说，dde-session-ui这个项目太需要一个文档了，要把工作流程写的非常详细才可以。">
 <meta property="og:locale">
 <meta property="article:published_time" content="2017-08-15T07:43:43.000Z">
-<meta property="article:modified_time" content="2021-04-02T07:39:48.279Z">
+<meta property="article:modified_time" content="2021-04-02T07:42:06.117Z">
 <meta property="article:author" content="小竹">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:creator" content="@justforlxz">
@@ -71,7 +71,7 @@
 
     <!-- custom head -->
 
-<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
 </head>
 
     <body>
@@ -250,7 +250,7 @@
 </div>
             <div class="post__content">
                 <p>排查了一天，最后终于确认了流程，知道了问题所在，不得不说，dde-session-ui这个项目太需要一个文档了，要把工作流程写的非常详细才可以。</p>
-<a id="more"></a>
+<span id="more"></span>
 
 <p>上午收到了一条新任务，是龙芯上新安装的系统需要输入两次密码才可以登录，没有错误提示。近期并没有什么太大的改动，无非是给龙芯也用上了简单重构过的dde-session-ui，怎么会导致这样的问题。</p>
 <p>由于是新安装的系统才会发生，而且是现象一旦发生，就无法重现，这让我头有点大，怎么会有这样的神奇的事情，而且日志中很正常，没有收到message导致密码框被清空。我提交了一个添加了更多日志的，然后重装的龙芯的系统(龙芯重装一次要半个小时)，等重装完了，切换到tty去安装这个包，然后重启lightdm，让我输入密码回车以后，密码消失，我赶紧去看日志，但是日志中并没有我的输出，回车以后肯定会有的一行输出也没有(内心OS：What the fuck is that？)</p>

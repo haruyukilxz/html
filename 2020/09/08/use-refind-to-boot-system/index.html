@@ -42,7 +42,7 @@
 <meta property="og:image" content="https://blog.justforlxz.com/2020/09/08/use-refind-to-boot-system/IMG_1090.JPG">
 <meta property="og:image" content="https://blog.justforlxz.com/2020/09/08/use-refind-to-boot-system/IMG_1091.JPG">
 <meta property="article:published_time" content="2020-09-08T19:54:26.000Z">
-<meta property="article:modified_time" content="2021-04-02T07:39:48.215Z">
+<meta property="article:modified_time" content="2021-04-02T07:42:06.045Z">
 <meta property="article:author" content="小竹">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary">
@@ -78,7 +78,7 @@
 
     <!-- custom head -->
 
-<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
 </head>
 
     <body>
@@ -259,7 +259,7 @@
 </div>
             <div class="post__content">
                 <p>今年的七夕，我老婆给我买了一台surface laptop 2代，8G内存 + 256G存储版本，我也成功的用上了田牌的机器。</p>
-<a id="more"></a>
+<span id="more"></span>
 
 <blockquote>
 <p>2020/09/17更新： 不知道为啥，反正是开了对内核签名以后，哪怕是BIOS关闭了安全启动，仍然出现mkinitcpio会卡在autodetect上，无奈全部都删掉重来了，没有弄签名，希望各位看到本文章以后解决了这个问题能回复一下，谢谢。</p>
@@ -273,16 +273,20 @@
 <p>首先我看了一下arch wiki上有关于安全启动的内容，写的挺详细的，就是看不懂。讲了各种的知识点，各种签名的方式，但是真正到我开始用的时候，我是一直失败的，失败的方式我就不说了，直接说我如何成功的。</p>
 <p>首先我放弃了grub,一个原因是grub的安全启动我一直没有尝试成功，另外一个是我只有一个系统，没必要用grub。我换成了rEFInd来作为我的bootloader，首先安装rEFInd的引导。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yay -S refind shim-signed sbsigntools</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo refind-install --shim &#x2F;usr&#x2F;share&#x2F;shim-signed&#x2F;shimx64.efi --localkeys</span><br></pre></td></tr></table></figure>
+
 <p>来解释一下上面两条明令。第一个是安装必要的软件包，refind是bootloader本体，shim-signed是aur里面的用于安全启动的包，shim提供了一种并行的安全启动验证功能，我们使用它来启动refind的efi,再通过refind的efi启动内核，达到终极套娃启动。sbsigntools是用于给文件签名的工具，我们安装完refind以后，refind会帮助我们生成一份默认的key,我们需要使用这个key来为内核进行签名。</p>
 <p>在执行第二条明令以后，会有几次询问，都选择Y回车就行。</p>
 <p>然后使用sbsigntools来对内核进行签名。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo sbsign --key &#x2F;etc&#x2F;refind.d&#x2F;keys&#x2F;refind_local.key --cert &#x2F;etc&#x2F;refind.d&#x2F;keys&#x2F;refind_local.crt --output &#x2F;boot&#x2F;vmlinuz-linux-surface &#x2F;boot&#x2F;vmlinuz-linux-surface</span><br></pre></td></tr></table></figure>
+
 <p>准备工作已经进行一半了，我们只需要写一下refind的配置文件，就可以启动了。</p>
 <p>refind的配置文件有两个地方，一个是boot分区下面的refind_linux.conf，还有一个是在efi分区里的EFI/refind/refind.conf，我们需要修改的是后者。</p>
 <p>默认配置文件都是注释的，其实我们全部删了就可以了，有需要修改的地方去看原始文件或者文档就行了。</p>
 <p>添加一个menuentry，就可以启动系统了。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">also_scan_dirs +,ArchFS&#x2F;boot</span><br><span class="line">dont_scan_dirs ESP:&#x2F;EFI&#x2F;boot,EFI&#x2F;boot</span><br><span class="line">dont_scan_files shim.efi,MokManager.efi,fbx64.efi,mmx64.efi,shimx64.efi</span><br><span class="line">scan_all_linux_kernels false</span><br><span class="line"></span><br><span class="line">menuentry &quot;Arch Linux&quot; &#123;</span><br><span class="line">    icon     &#x2F;EFI&#x2F;refind&#x2F;icons&#x2F;os_arch.png</span><br><span class="line">    volume   8B131F77-62D7-4B4A-82D4-B60D7ACA2F6C</span><br><span class="line">    loader   &#x2F;ArchFS&#x2F;boot&#x2F;vmlinuz-linux-surface</span><br><span class="line">    initrd   &#x2F;ArchFS&#x2F;boot&#x2F;intel-ucode.img</span><br><span class="line">    initrd   &#x2F;ArchFS&#x2F;boot&#x2F;initramfs-linux-surface.img</span><br><span class="line">    options  &quot;root&#x3D;UUID&#x3D;9f8f9556-8ec1-4feb-9519-435beac8376f rw rootflags&#x3D;subvol&#x3D;ArchFS  loglevel&#x3D;3 quiet add_efi_memmap&quot;</span><br><span class="line">    submenuentry &quot;Boot using fallback initramfs&quot; &#123;</span><br><span class="line">        initrd &#x2F;ArchFS&#x2F;boot&#x2F;initramfs-linux-surface-fallback.img</span><br><span class="line">    &#125;</span><br><span class="line">    submenuentry &quot;Boot to terminal&quot; &#123;</span><br><span class="line">        add_options &quot;systemd.unit&#x3D;multi-user.target&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>我用的是btrfs文件系统，所以配置文件有点罗嗦。解释一下上面的内容。</p>
 <p>also_scan_dirs是指定扫描某个目录，因为我是btrfs文件系统，必须使用这个才能让refind扫描到内核文件，否则会无法启动。</p>
 <p>dont_scan_dirs是跳过指定的目录，因为refind默认是会扫描所有的efi文件，我们自己提供了emnuentry,所以不需要让它扫描了。</p>
@@ -295,6 +299,7 @@
 <p>还有一个后续的动作需要处理，就是内核升级以后，我们需要对内核重新签名，否则会被bios拒绝启动。</p>
 <p>编辑<code>/etc/pacman.d/hooks/99-secureboot.hook</code>,并写入以下配置：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[Trigger]</span><br><span class="line">Operation &#x3D; Install</span><br><span class="line">Operation &#x3D; Upgrade</span><br><span class="line">Type &#x3D; Package</span><br><span class="line">Target &#x3D; linux</span><br><span class="line">Target &#x3D; linux-surface</span><br><span class="line">Target &#x3D; systemd</span><br><span class="line"></span><br><span class="line">[Action]</span><br><span class="line">Description &#x3D; Signing Kernel for SecureBoot</span><br><span class="line">When &#x3D; PostTransaction</span><br><span class="line">Exec &#x3D; &#x2F;usr&#x2F;bin&#x2F;sh -c &quot;&#x2F;usr&#x2F;bin&#x2F;find &#x2F;boot&#x2F; -type f \( -name &#39;vmlinuz-*&#39; -o -name &#39;systemd*&#39; \) -exec &#x2F;usr&#x2F;bin&#x2F;sh -c &#39;if ! &#x2F;usr&#x2F;bin&#x2F;sbverify --list &#123;&#125; 2&gt;&#x2F;dev&#x2F;null | &#x2F;usr&#x2F;bin&#x2F;grep -q \&quot;signature certificates\&quot;; then &#x2F;usr&#x2F;bin&#x2F;sbsign --key &#x2F;etc&#x2F;refind.d&#x2F;keys&#x2F;refind_local.key --cert &#x2F;etc&#x2F;refind.d&#x2F;keys&#x2F;refind_local.crt --output &#123;&#125; &#123;&#125;; fi&#39; \;&quot;</span><br><span class="line">Depends &#x3D; sbsigntools</span><br><span class="line">Depends &#x3D; findutils</span><br><span class="line">Depends &#x3D; grep</span><br></pre></td></tr></table></figure>
+
 <p>享受安全启动吧～</p>
 <img src="/2020/09/08/use-refind-to-boot-system/IMG_1089.JPG" class="lazy" data-srcset="/2020/09/08/use-refind-to-boot-system/IMG_1089.JPG" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAABlBMVEXMzMyWlpYU2uzLAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNgAAAAAgAB9HFkpgAAAABJRU5ErkJggg==" class="" title="图片">
 <img src="/2020/09/08/use-refind-to-boot-system/IMG_1090.JPG" class="lazy" data-srcset="/2020/09/08/use-refind-to-boot-system/IMG_1090.JPG" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAABlBMVEXMzMyWlpYU2uzLAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNgAAAAAgAB9HFkpgAAAABJRU5ErkJggg==" class="" title="图片">

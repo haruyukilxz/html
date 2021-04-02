@@ -39,7 +39,7 @@
 <meta property="og:description" content="为了节省读者的时间，我先简述一下阅读这篇文章需要了解的知识。 这篇文章将基于Docker来构建nginx、php和mysql来搭建LNMP环境，和其他教程有所不同的是，需要有一定的Docker基础。">
 <meta property="og:locale">
 <meta property="article:published_time" content="2019-02-21T10:11:15.000Z">
-<meta property="article:modified_time" content="2021-04-02T07:39:48.183Z">
+<meta property="article:modified_time" content="2021-04-02T07:42:06.009Z">
 <meta property="article:author" content="小竹">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="LNMP">
@@ -77,7 +77,7 @@
 
     <!-- custom head -->
 
-<meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
 </head>
 
     <body>
@@ -259,7 +259,7 @@
             <div class="post__content">
                 <p>为了节省读者的时间，我先简述一下阅读这篇文章需要了解的知识。</p>
 <p>这篇文章将基于Docker来构建nginx、php和mysql来搭建LNMP环境，和其他教程有所不同的是，需要有一定的Docker基础。</p>
-<a id="more"></a>
+<span id="more"></span>
 
 <p>Docker是一个不错的工具，使我们不需要虚拟机那样的庞然大物就可以轻松的隔离运行的程序，这要感谢Linux的资源分离机制，避免启动一个虚拟机造成了大量资源浪费。</p>
 <p>首先需要在Deepin上安装Docker，添加Docker的deb仓库，并安装docker-ce。</p>
@@ -267,20 +267,26 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo nano &#x2F;etc&#x2F;apt&#x2F;sources.list.d&#x2F;docker.list</span><br></pre></td></tr></table></figure>
 <p>写入</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">deb [arch&#x3D;amd64] https:&#x2F;&#x2F;download.docker.com&#x2F;linux&#x2F;debian jessie edge</span><br></pre></td></tr></table></figure>
+
 <p>刷新一下仓库就可以安装了。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo apt update &amp;&amp; sudo apt install docker-ce docker-compose</span><br></pre></td></tr></table></figure>
+
 <p>安装完成后重启一下系统，准备工作就算完成了一半了。</p>
 <p>在家目录创建一个Projects目录，当做我们LNMP的工作目录，创建一个名叫<em>docker-compose.yaml</em>的文件，这是docker-compose的配置文件，我们通过docker-compose这个工具来管理我们的Docker容器。</p>
 <p>所有的镜像均采用最新版本，nginx(1.15.8)，php(7.3.2)，mysql(8.0.15)，如有需要，自行选择不同版本的镜像。</p>
 <p>注意PHP7已经不支持mysql扩展，使用内置的MySQLnd。</p>
 <p>写入以下配置文件：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">version: &#39;3&#39;</span><br><span class="line"></span><br><span class="line">services:</span><br><span class="line">  nginx:</span><br><span class="line">    # 设置容器名字</span><br><span class="line">    container_name: &quot;nginx&quot;</span><br><span class="line">    # 采用最新的nginx</span><br><span class="line">    image: nginx:latest</span><br><span class="line">    # 绑定80端口</span><br><span class="line">    ports:</span><br><span class="line">        - &quot;80:80&quot;</span><br><span class="line">    # 添加php容器的依赖</span><br><span class="line">    depends_on:</span><br><span class="line">        - &quot;php&quot;</span><br><span class="line">    # 绑定数据目录</span><br><span class="line">    volumes:</span><br><span class="line">        - &quot;.&#x2F;volumes&#x2F;nginx&#x2F;conf.d:&#x2F;etc&#x2F;nginx&#x2F;conf.d&quot;</span><br><span class="line">        - &quot;.&#x2F;volumes&#x2F;html:&#x2F;usr&#x2F;share&#x2F;nginx&#x2F;html&quot;</span><br><span class="line">    restart: always</span><br><span class="line"></span><br><span class="line">  php:</span><br><span class="line">    # 设置容器名字</span><br><span class="line">    container_name: &quot;php&quot;</span><br><span class="line">    # 采用最新的php</span><br><span class="line">    image: php:fpm</span><br><span class="line">    # 绑定端口</span><br><span class="line">    ports:</span><br><span class="line">        - &quot;9000:9000&quot;</span><br><span class="line">    # 绑定数据目录</span><br><span class="line">    volumes:</span><br><span class="line">        - &quot;.&#x2F;volumes&#x2F;html:&#x2F;var&#x2F;www&#x2F;html&quot;</span><br><span class="line">    restart: always</span><br><span class="line"></span><br><span class="line">  mysql:</span><br><span class="line">    # 设置容器名字</span><br><span class="line">    container_name: &quot;mysql&quot;</span><br><span class="line">    # 采用最新的mysql</span><br><span class="line">    image: mysql:latest</span><br><span class="line">    # 绑定端口</span><br><span class="line">    ports:</span><br><span class="line">        - &quot;3306:3306&quot;</span><br><span class="line">    # 设置环境变量</span><br><span class="line">    environment:</span><br><span class="line">        - MYSQL_ROOT_PASSWORD&#x3D;(自己设置密码)</span><br><span class="line">    # 绑定数据目录</span><br><span class="line">    volumes:</span><br><span class="line">        - &quot;.&#x2F;volumes&#x2F;mysql:&#x2F;var&#x2F;lib&#x2F;mysql&quot;</span><br><span class="line">    restart: always</span><br></pre></td></tr></table></figure>
+
 <p>创建nginx的配置文件，编辑 <em>./volumes/nginx/conf.d/nginx.conf</em> ：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen       80;</span><br><span class="line">    server_name  localhost;</span><br><span class="line">    location &#x2F; &#123;</span><br><span class="line">        root   &#x2F;usr&#x2F;share&#x2F;nginx&#x2F;html;</span><br><span class="line">        index  index.html index.htm index.php;</span><br><span class="line">    &#125;</span><br><span class="line">    error_page   500 502 503 504  &#x2F;50x.html;</span><br><span class="line">    location &#x3D; &#x2F;50x.html &#123;</span><br><span class="line">        root   &#x2F;usr&#x2F;share&#x2F;nginx&#x2F;html;</span><br><span class="line">    &#125;</span><br><span class="line">    location ~ \.php$ &#123;</span><br><span class="line">        fastcgi_pass   php:9000;</span><br><span class="line">        fastcgi_index  index.php;</span><br><span class="line">        fastcgi_param  SCRIPT_FILENAME &#x2F;var&#x2F;www&#x2F;html&#x2F;$fastcgi_script_name;</span><br><span class="line">        include        fastcgi_params;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>创建php测试文件，编辑 <em>./volumes/html/index.php</em> :</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">phpinfo();</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
 <p>启动docker，第一次需要拉取一下镜像:</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker-compose up --build -d</span><br></pre></td></tr></table></figure>
+
 <p>等全部结束以后，就可以访问localhost看到php的信息了。</p>
 <p>通过Docker的方法来使用LNMP，不污染宿主机环境，不会再因为各种依赖问题而搞坏系统，这恰恰是新手容易犯的错误，使用Docker，方便你我。</p>
 
