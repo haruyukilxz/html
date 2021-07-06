@@ -18,7 +18,7 @@
   <meta name="author" content="小竹">
   <meta name="keywords" content="">
   
-  <title>如何给Arch打一个包 - 小竹&#39;s blog</title>
+  <title>leetcode 704. 二分查找 - 小竹&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -176,7 +176,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="如何给Arch打一个包">
+            <span class="h2" id="subtitle" title="leetcode 704. 二分查找">
               
             </span>
 
@@ -186,8 +186,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-03-04 11:23" pubdate>
-        2021年3月4日 上午
+      <time datetime="2021-07-06 16:35" pubdate>
+        2021年7月6日 下午
       </time>
     </span>
   
@@ -198,7 +198,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      851 字
+      373 字
     </span>
   
 
@@ -208,7 +208,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      10
+      5
        分钟
     </span>
   
@@ -238,54 +238,48 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">如何给Arch打一个包</h1>
+            <h1 style="display: none">leetcode 704. 二分查找</h1>
             
             <div class="markdown-body">
-              <p>Arch 使用的是 pacman 包管理器，包格式是 tar.zst。Arch 提供了一些工具用于创建 tar.zst 包，首先需要安装 base-devel 包和 devtools 包。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">pacman -S base-devel devtools<br></code></pre></td></tr></table></figure>
+              <h2 id="704-二分查找"><a href="#704-二分查找" class="headerlink" title="704. 二分查找"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/binary-search/">704. 二分查找</a></h2><p>给定一个 n 个元素有序的（升序）整型数组 nums 和一个目标值 target  ，写一个函数搜索 nums 中的 target，如果目标值存在返回下标，否则返回 -1。</p>
+<p>示例 1:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">输入: nums = [-1,0,3,5,9,12], target = 9<br>输出: 4<br>解释: 9 出现在 nums 中并且下标为 4<br></code></pre></td></tr></table></figure>
 
-<p>Arch 的打包流程是这样的，要先写一个 PKGBUILD 文件，这个文件描述了构建一个包所需的全部信息，如从哪里下载源码，依赖有哪些，构建的版本是多少，如何进行构建等。</p>
-<h1 id="PKGBUILD"><a href="#PKGBUILD" class="headerlink" title="PKGBUILD"></a>PKGBUILD</h1><p>一个基本的 PKGBUILD 格式如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs text"># Maintainer: justforlxz &lt;justforlxz@gmail.com&gt;<br><br>pkgname=dtkcore-git<br>pkgver=5.4.0.r1.ge7e7a99<br>pkgrel=1<br>pkgdesc=&#x27;DTK core modules&#x27;<br>arch=(&#x27;x86_64&#x27;)<br>url=&quot;https://github.com/linuxdeepin/dtkcore&quot;<br>license=(&#x27;LGPL3&#x27;)<br>depends=(&#x27;dconf&#x27; &#x27;deepin-desktop-base-git&#x27; &#x27;python&#x27; &#x27;gsettings-qt&#x27; &#x27;lshw&#x27;)<br>makedepends=(&#x27;git&#x27; &#x27;qt5-tools&#x27; &#x27;gtest&#x27;)<br>conflicts=(&#x27;dtkcore&#x27;)<br>provides=(&#x27;dtkcore&#x27;)<br>groups=(&#x27;deepin-git&#x27;)<br>source=(&quot;$pkgname::git://github.com/linuxdeepin/dtkcore.git&quot;)<br>sha512sums=(&#x27;SKIP&#x27;)<br><br>pkgver() &#123;<br>    cd $pkgname<br>    git describe --long --tags | sed &#x27;s/\([^-]*-g\)/r\1/;s/-/./g&#x27;<br>&#125;<br><br>build() &#123;<br>  cd $pkgname<br>  qmake-qt5 PREFIX=/usr DTK_VERSION=$pkgver LIB_INSTALL_DIR=/usr/lib<br>  make<br>&#125;<br><br>package() &#123;<br>  cd $pkgname<br>  make INSTALL_ROOT=&quot;$pkgdir&quot; install<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>示例 2:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">输入: nums = [-1,0,3,5,9,12], target = 2<br>输出: -1<br>解释: 2 不存在 nums 中因此返回 -1<br></code></pre></td></tr></table></figure>
 
-<p>以 dtkcore 为例，整个配置文件十分清晰明了，一看就知道构建工具是如何一步步制作出一个包的。</p>
-<p>将配置文件保存到目录里，以 <code>PKGBUILD</code> 命名，然后执行 <code>makepkg</code>。</p>
-<p>makepkg 是用于执行 PKGBUILD 文件的工具，它根据文件中的描述，进行包的构建。</p>
-<h1 id="如何提交一个包到-aur"><a href="#如何提交一个包到-aur" class="headerlink" title="如何提交一个包到 aur"></a>如何提交一个包到 aur</h1><p>当你希望自己打的包可以被别人使用的时候，一般都会请求上传到官方仓库，但是进入官方仓库的流程异常繁琐，而且对贡献者的要求会比较高。Arch 提供了一个用户仓库，供用户自由分享配置文件，只需要下载配置文件，在本机打包就可以了。</p>
-<p>根据 aur 的 <a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/AUR_submission_guidelines">贡献指南</a>，我们可以很轻松的上传自己的配置文件，并借用yay等aur工具自动下载和构建软件包。</p>
-<blockquote>
-<p>用户可以通过 Arch User Repository 分享 PKGBUILD。AUR 中不包含任何二进制包，仅包含用户上传的 PKGBUILD，供其他用户下载使用。所有软件包都是非官方的，使用风险自担。</p>
-</blockquote>
-<p>提交aur之前，需要先了解一下 aur 的一些要求，<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/AUR_submission_guidelines#Rules_of_submission">Rules of submission</a> 提供了一些规则，只要我们按照规则来，就可以上传和维护我们自己的包。</p>
-<p>首先需要去 <a target="_blank" rel="noopener" href="https://aur.archlinux.org/">aur官网</a> 注册一个账号，并上传自己的 ssh key 我们通过克隆一个新的仓库来作为上传的方式。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">git clone ssh://aur@aur.archlinux.org/&lt;pkgname&gt;.git<br></code></pre></td></tr></table></figure>
+<p>提示：</p>
+<p>你可以假设 nums 中的所有元素是不重复的。<br>n 将在 [1, 10000]之间。<br>nums 的每个元素都将在 [-9999, 9999]之间。</p>
+<h2 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h2><p>使用双指针实现二分查找。</p>
+<p>初始化 <code>left</code> 为0, <code>right</code> 为 nums的长度减一，在每次遍历的时候，计算 <code>mid</code> 为中间值，计算方法如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">mid = left + (right - left) / 2;<br></code></pre></td></tr></table></figure>
 
-<p>以dtkcore为例，克隆的时候把pkgname改成dtkcore。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">git clone ssh://aur@aur.archlinux.org/dtkcore.git<br></code></pre></td></tr></table></figure>
-
-<p><strong>如果是第一次创建，会提示你克隆的一个空仓库。</strong></p>
-<p>把 PKGBUILD 文件复制到克隆的目录，然后执行 <code>makepkg --printsrcinfo &gt; .SRCINFO</code> 创建一个软件包信息，将 <code>.SRCINFO</code> 和 <code>PKGBUILD</code> 文件都添加到 git 中，然后提交 commit 信息，推送到服务器。</p>
-<blockquote>
-<p>注意： 如果您忘记在首次提交中包含 .SRCINFO，您可以使用 rebasing with –root 或是 filtering the tree 使得 AUR 接受您的第一次推送</p>
-</blockquote>
-<blockquote>
-<p>提示： 为了保持工作目录和提交尽可能的干净，可以创建 gitignore 文件来排除所有文件，然后再按需添加文件。</p>
-</blockquote>
-<p>参考资料：</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/PKGBUILD">https://wiki.archlinux.org/index.php/PKGBUILD</a></p>
-</blockquote>
+<p>当 <code>nums[mid] == target</code> 时，即查找到目标值，返回 <code>mid</code>。<br>当 <code>nums[mid] &lt; target</code> 时，调整 <code>right</code> 为 <code>mid - 1</code>。<br>当 <code>nums[mid] &gt; target</code> 时，调整 <code>left</code> 为 <code>mid + 1</code>。</p>
+<p>循环条件为 <code>left &lt;= right</code>，当超过中间值仍然没有查找到目标值，<code>left</code> 会超过 <code>right</code> 的位置，从而跳出循环，返回 <code>-1</code>。</p>
+<p>详细实现：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">search</span><span class="hljs-params">(<span class="hljs-keyword">const</span> std::vector&lt;<span class="hljs-keyword">int</span>&gt;&amp; nums, <span class="hljs-keyword">int</span> target)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (nums.<span class="hljs-built_in">size</span>() &lt; <span class="hljs-number">2</span>) &#123;<br>        <span class="hljs-keyword">return</span> nums[<span class="hljs-number">0</span>] == target ? <span class="hljs-number">0</span> : <span class="hljs-number">-1</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">int</span> mid = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">int</span> left = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">int</span> right = nums.<span class="hljs-built_in">size</span>() <span class="hljs-number">-1</span>;<br><br>    <span class="hljs-keyword">while</span> (left &lt;= right) &#123;<br>        mid = left + (right - left) / <span class="hljs-number">2</span>;<br>        <span class="hljs-keyword">if</span> (nums[mid] == target) &#123;<br>            <span class="hljs-keyword">return</span> mid;<br>        &#125;<br>        <span class="hljs-keyword">if</span> (target &lt; nums[mid]) &#123;<br>            right = mid - <span class="hljs-number">1</span>;<br>        &#125;<br>        <span class="hljs-keyword">else</span> &#123;<br>            left = mid + <span class="hljs-number">1</span>;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 
             </div>
             <hr>
             <div>
               <div class="post-metas mb-3">
                 
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/leetcode%E7%AE%97%E6%B3%95/">leetcode算法</a>
+                    
+                  </div>
+                
                 
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Linux/">Linux</a>
+                      <a class="hover-with-bg" href="/tags/%E6%95%B0%E7%BB%84/">数组</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%AE%80%E5%8D%95/">简单</a>
                     
                   </div>
                 
@@ -302,18 +296,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/07/06/binary-search/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">leetcode 704. 二分查找</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/02/27/timemachine/">
-                        <span class="hidden-mobile">timemachine</span>
+                      <a href="/2021/03/04/package-manager-for-arch/">
+                        <span class="hidden-mobile">如何给Arch打一个包</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
