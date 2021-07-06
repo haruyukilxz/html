@@ -1,277 +1,266 @@
+
+
 <!DOCTYPE html>
-<html lang="zh">
-    <head>
-    <meta charset="utf-8">
-
-    
-
-    <!-- 渲染优化 -->
-    <meta name="renderer" content="webkit">
-    <meta name="force-rendering" content="webkit">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <meta name="HandheldFriendly" content="True" >
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
-    <!--icon-->
-
-    <link rel="shortcut icon" type='image/x-icon' href="/favicon.ico">
-
-
-    <!-- meta -->
-
-
-<title>使用webpack-dev-server来监听项目变化 | 小竹&#39;s blog</title>
-
-
-    <meta name="keywords" content="Vue">
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
 
 
 
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="webpack的出现方便了前端开发者，使开发和部署分成了两部分，开发者可以正常根据工程化的要求进行开发，部署时通过webpack实现代码的裁剪和优化。
+本次就介绍一个webpack的功能 webpack-dev-server
+将webpack与提供实时重载的开发服务器一起使用。这仅应用于开发。它在后台使用了webpack-dev-middleware，它提供了对Webpack资产的快速内存访问。">
+  <meta name="author" content="小竹">
+  <meta name="keywords" content="">
+  
+  <title>使用webpack-dev-server来监听项目变化 - 小竹&#39;s blog</title>
 
-    <!-- OpenGraph -->
- 
-    <meta name="description" content="webpack的出现方便了前端开发者，使开发和部署分成了两部分，开发者可以正常根据工程化的要求进行开发，部署时通过webpack实现代码的裁剪和优化。 本次就介绍一个webpack的功能 webpack-dev-server 将webpack与提供实时重载的开发服务器一起使用。这仅应用于开发。它在后台使用了webpack-dev-middleware，它提供了对Webpack资产的快速内存访问。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="使用webpack-dev-server来监听项目变化">
-<meta property="og:url" content="https://blog.justforlxz.com/2019/11/25/%E4%BD%BF%E7%94%A8webpack-dev-server%E6%9D%A5%E7%9B%91%E5%90%AC%E9%A1%B9%E7%9B%AE%E5%8F%98%E5%8C%96/index.html">
-<meta property="og:site_name" content="小竹&#39;s blog">
-<meta property="og:description" content="webpack的出现方便了前端开发者，使开发和部署分成了两部分，开发者可以正常根据工程化的要求进行开发，部署时通过webpack实现代码的裁剪和优化。 本次就介绍一个webpack的功能 webpack-dev-server 将webpack与提供实时重载的开发服务器一起使用。这仅应用于开发。它在后台使用了webpack-dev-middleware，它提供了对Webpack资产的快速内存访问。">
-<meta property="og:locale">
-<meta property="article:published_time" content="2019-11-25T17:54:36.000Z">
-<meta property="article:modified_time" content="2021-05-10T09:31:48.655Z">
-<meta property="article:author" content="小竹">
-<meta property="article:tag" content="Vue">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:creator" content="@justforlxz">
-
-
-    
-<link rel="stylesheet" href="/css/style/main.css">
- 
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
 
-    
-<link rel="stylesheet" href="/css/style/dark.css">
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
 
-    
-<script src="/js/darkmode.js"></script>
-
-
-
+  
     
     
-        <link rel="stylesheet" id="hl-default-theme" href="/css/highlight/default.css" media="none" onload="if(getComputedStyle(document.documentElement).getPropertyValue('--color-mode').indexOf('dark')===-1)this.media='all'">
-        
-            <link rel="stylesheet" id="hl-dark-theme" href="/css/highlight/dark.css" media="none" onload="if(getComputedStyle(document.documentElement).getPropertyValue('--color-mode').indexOf('dark')!==-1)this.media='all'">
-        
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
     
+  
 
-    
-    
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
 
-     
 
-    <!-- custom head -->
 
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"blog.justforlxz.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"49e5979358cb9ca19e5e56fc4adc4a98","google":"UA-129024325-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
 <meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
 </head>
 
-    <body>
-        <div id="app">
-            <header class="header">
-    <div class="header__left">
-        <a href="/" class="button">
-            <span class="logo__text">
-                小竹's blog
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>小竹's blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="使用webpack-dev-server来监听项目变化">
+              
             </span>
-        </a>
-    </div>
-    <div class="header__right">
-        
-            <div class="navbar__menus">
-                
-                    <a href="/" class="navbar-menu button">
-                        首页
-                    </a>
-                
-                    <a href="/tags/" class="navbar-menu button">
-                        标签
-                    </a>
-                
-                    <a href="/categories/" class="navbar-menu button">
-                        分类
-                    </a>
-                
-                    <a href="/archives/" class="navbar-menu button">
-                        归档
-                    </a>
-                
-                    <a href="/friends/" class="navbar-menu button">
-                        友链
-                    </a>
-                
-                    <a href="/about/" class="navbar-menu button">
-                        关于
-                    </a>
-                
-            </div>
-        
-        
-        
-    <a href="/search/" id="btn-search">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="24" height="24" fill="currentColor" stroke="currentColor" stroke-width="32"><path d="M192 448c0-141.152 114.848-256 256-256s256 114.848 256 256-114.848 256-256 256-256-114.848-256-256z m710.624 409.376l-206.88-206.88A318.784 318.784 0 0 0 768 448c0-176.736-143.264-320-320-320S128 271.264 128 448s143.264 320 320 320a318.784 318.784 0 0 0 202.496-72.256l206.88 206.88 45.248-45.248z"></path></svg>
-    </a>
 
-
-        
-        
-    <a href="javaScript:void(0);" id="btn-toggle-dark">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-    </a>
-
-
-         
-    <a href="javaScript:void(0);" id="b2t" aria-label="Back to Top" title="Back to Top">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width='32' height='32' fill="currentColor" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M13.889,11.611c-0.17,0.17-0.443,0.17-0.612,0l-3.189-3.187l-3.363,3.36c-0.171,0.171-0.441,0.171-0.612,0c-0.172-0.169-0.172-0.443,0-0.611l3.667-3.669c0.17-0.17,0.445-0.172,0.614,0l3.496,3.493C14.058,11.167,14.061,11.443,13.889,11.611 M18.25,10c0,4.558-3.693,8.25-8.25,8.25c-4.557,0-8.25-3.692-8.25-8.25c0-4.557,3.693-8.25,8.25-8.25C14.557,1.75,18.25,5.443,18.25,10 M17.383,10c0-4.07-3.312-7.382-7.383-7.382S2.618,5.93,2.618,10S5.93,17.381,10,17.381S17.383,14.07,17.383,10"></path>
-        </svg>
-    </a>
-
-
-        
-            <a class="dropdown-icon button" id="btn-dropdown">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width='24' height='24' fill="none" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round">
-                    <path fill="currentColor" d="M3.314,4.8h13.372c0.41,0,0.743-0.333,0.743-0.743c0-0.41-0.333-0.743-0.743-0.743H3.314c-0.41,0-0.743,0.333-0.743,0.743C2.571,4.467,2.904,4.8,3.314,4.8z M16.686,15.2H3.314c-0.41,0-0.743,0.333-0.743,0.743s0.333,0.743,0.743,0.743h13.372c0.41,0,0.743-0.333,0.743-0.743S17.096,15.2,16.686,15.2z M16.686,9.257H3.314c-0.41,0-0.743,0.333-0.743,0.743s0.333,0.743,0.743,0.743h13.372c0.41,0,0.743-0.333,0.743-0.743S17.096,9.257,16.686,9.257z"></path>
-                </svg>
-            </a>
-            <div class="dropdown-menus" id="dropdown-menus">
-                <a class="dropback-icon button" id="btn-dropback">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width='24' height='24' fill="none" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round">
-                        <path fill="currentColor" d="M11.469,10l7.08-7.08c0.406-0.406,0.406-1.064,0-1.469c-0.406-0.406-1.063-0.406-1.469,0L10,8.53l-7.081-7.08c-0.406-0.406-1.064-0.406-1.469,0c-0.406,0.406-0.406,1.063,0,1.469L8.531,10L1.45,17.081c-0.406,0.406-0.406,1.064,0,1.469c0.203,0.203,0.469,0.304,0.735,0.304c0.266,0,0.531-0.101,0.735-0.304L10,11.469l7.08,7.081c0.203,0.203,0.469,0.304,0.735,0.304c0.267,0,0.532-0.101,0.735-0.304c0.406-0.406,0.406-1.064,0-1.469L11.469,10z"></path>
-                    </svg>
-                </a>
-                
-                    <a href="/" class="dropdown-menu button">
-                        首页
-                    </a>
-                
-                    <a href="/tags/" class="dropdown-menu button">
-                        标签
-                    </a>
-                
-                    <a href="/categories/" class="dropdown-menu button">
-                        分类
-                    </a>
-                
-                    <a href="/archives/" class="dropdown-menu button">
-                        归档
-                    </a>
-                
-                    <a href="/friends/" class="dropdown-menu button">
-                        友链
-                    </a>
-                
-                    <a href="/about/" class="dropdown-menu button">
-                        关于
-                    </a>
-                
-            </div>
-            <script>
-                document.getElementById('btn-dropdown').addEventListener('click', () => {
-                    const dd = document.getElementById('dropdown-menus');
-                    requestAnimationFrame(() => {
-                        dd.style.display = 'flex';
-                        requestAnimationFrame(() => {
-                            dd.style.transform = 'translateY(0)';
-                            dd.style.opacity = '1';
-                        });
-                    });
-                });
-                document.getElementById('btn-dropback').addEventListener('click', () => {
-                    const dd = document.getElementById('dropdown-menus');
-                    dd.style.transform = 'translateY(2.25rem)';                    
-                    dd.style.opacity = '0';
-                    setTimeout(() => {dd.style.display = 'none';}, 350);
-                });
-            </script>
-        
-    </div>
-</header>
-
-
-            <main class="main">
-    
-<div class="post-title">
-    <h1 class="post-title__text">
-        使用webpack-dev-server来监听项目变化
-    </h1>
-    <div class="post-title__meta">
-        <a href="/archives/2019/11/" class="post-meta__date button">
-    2019-11-25
-</a>
-        
-    <span class="separate-dot"></span><a href="/categories/Vue/" class="button">Vue</a>
-
- 
-        
-    
-    
-
-
- 
-
- 
-    </div>
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2019-11-25 17:54" pubdate>
+        2019年11月25日 下午
+      </time>
+    </span>
+  
 </div>
 
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.4k 字
+    </span>
+  
 
-    <div class="post__with-side">
-        <aside class="post-side">
-            <div class="post-side__toc">
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E7%94%A8webpack-dev-server"><span class="toc-number">1.</span> <span class="toc-text">启用webpack-dev-server</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEwebpack"><span class="toc-number">2.</span> <span class="toc-text">配置webpack</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#devServer-before"><span class="toc-number">2.1.</span> <span class="toc-text">devServer.before</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#devServer-after"><span class="toc-number">2.2.</span> <span class="toc-text">devServer.after</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#devServer-allowedHosts"><span class="toc-number">2.3.</span> <span class="toc-text">devServer.allowedHosts</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#devServer-clientLogLevel"><span class="toc-number">2.4.</span> <span class="toc-text">devServer.clientLogLevel</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#devServer-color-%E5%8F%AA%E7%94%A8%E4%BA%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7-CLI"><span class="toc-number">2.5.</span> <span class="toc-text">devServer.color  - 只用于命令行工具(CLI)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#devServer-compress"><span class="toc-number">2.6.</span> <span class="toc-text">devServer.compress</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#devServer-contentBase"><span class="toc-number">2.7.</span> <span class="toc-text">devServer.contentBase</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#devServer-disableHostCheck"><span class="toc-number">2.8.</span> <span class="toc-text">devServer.disableHostCheck</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#devServer-filename"><span class="toc-number">2.9.</span> <span class="toc-text">devServer.filename</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
-            </div>
-        </aside>
-        <article class="post content-card">
-            <div class="post__header">
-    <div class="post__expire" id="post-expired-notify">
-        <p>
-            This article was last updated on <span id="expire-date"></span> days ago, the information described in the article may be outdated.
-        </p>
-    </div>
-    <script>
-        (() => {
-            var update = Date.parse("2021-05-10"),
-                date = new Date(),
-                now = date.getTime(),
-                expire = now - update,
-                expire_days = Math.floor(expire/(24*3600*1000));
-            if (expire_days >= 120) {
-                document.querySelectorAll('#expire-date')[0].innerHTML = expire_days;
-                document.querySelectorAll('#post-expired-notify')[0].style.display = 'block';
-            }
-        })();
-    </script>
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      18
+       分钟
+    </span>
+  
+
+  
+  
 </div>
-            <div class="post__content">
-                <p>webpack的出现方便了前端开发者，使开发和部署分成了两部分，开发者可以正常根据工程化的要求进行开发，部署时通过webpack实现代码的裁剪和优化。</p>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">使用webpack-dev-server来监听项目变化</h1>
+            
+            <div class="markdown-body">
+              <p>webpack的出现方便了前端开发者，使开发和部署分成了两部分，开发者可以正常根据工程化的要求进行开发，部署时通过webpack实现代码的裁剪和优化。</p>
 <p>本次就介绍一个webpack的功能 <code>webpack-dev-server</code></p>
 <p>将webpack与提供实时重载的开发服务器一起使用。这仅应用于开发。<br>它在后台使用了webpack-dev-middleware，它提供了对Webpack资产的快速内存访问。</p>
 <span id="more"></span>
 
 <p>webpack-dev-server提供了一个小型的express的http服务器，这个http服务器和client使用了websocket通讯协议，原始文件作出改动后，webpack-dev-server会实时的编译，但是最后的编译的文件并没有输出到目标文件夹。</p>
 <p><strong>注意：启动webpack-dev-server后，在目标文件夹中是看不到编译后的文件的,编译后的文件都保存到了内存当中来加速访问。</strong></p>
-<h2 id="启用webpack-dev-server"><a href="#启用webpack-dev-server" class="headerlink" title="启用webpack-dev-server"></a>启用webpack-dev-server</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install -D webpack-dev-server</span><br></pre></td></tr></table></figure>
+<h2 id="启用webpack-dev-server"><a href="#启用webpack-dev-server" class="headerlink" title="启用webpack-dev-server"></a>启用webpack-dev-server</h2><figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs axapta">npm install -D webpack-dev-<span class="hljs-keyword">server</span><br></code></pre></td></tr></table></figure>
 
 <p>在webpack.config.js中添加devServer对象：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var path &#x3D; require(&#39;path&#39;);</span><br><span class="line"></span><br><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">  &#x2F;&#x2F;...</span><br><span class="line">  devServer: &#123;</span><br><span class="line">    contentBase: path.join(__dirname, &#39;dist&#39;),</span><br><span class="line">    compress: true, &#x2F;&#x2F; 开启压缩</span><br><span class="line">    port: 9000 &#x2F;&#x2F; 指定运行的端口</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">var</span> path = require(<span class="hljs-string">&#x27;path&#x27;</span>);<br><br><span class="hljs-keyword">module</span>.<span class="hljs-keyword">exports</span> = &#123;<br>  <span class="hljs-comment">//...</span><br>  devServer: &#123;<br>    contentBase: path.join(__dirname, <span class="hljs-string">&#x27;dist&#x27;</span>),<br>    compress: <span class="hljs-keyword">true</span>, <span class="hljs-comment">// 开启压缩</span><br>    port: <span class="hljs-number">9000</span> <span class="hljs-comment">// 指定运行的端口</span><br>  &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
 
 <p>然后通过<code>npx webpack-dev-server</code>启动，终端上会输出一些信息，一般我们会增加一些参数来使输出更加好看:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">webpack-dev-server --devtool eval-source-map --progress --colors --hot --inline</span><br></pre></td></tr></table></figure>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs brainfuck"><span class="hljs-comment">webpack</span><span class="hljs-literal">-</span><span class="hljs-comment">dev</span><span class="hljs-literal">-</span><span class="hljs-comment">server</span> --<span class="hljs-comment">devtool</span> <span class="hljs-comment">eval</span><span class="hljs-literal">-</span><span class="hljs-comment">source</span><span class="hljs-literal">-</span><span class="hljs-comment">map</span> --<span class="hljs-comment">progress</span> --<span class="hljs-comment">colors</span> --<span class="hljs-comment">hot</span> --<span class="hljs-comment">inline</span><br></code></pre></td></tr></table></figure>
 
 <p>上面的命令增加一个开发工具 <code>eval-source-map</code>，开启了progress进度显示，开启了colors颜色，hot热更新和inline更新模式。上面的参数也可以添加到devServer的属性中。</p>
 <p>终端输出的内容如下:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">10% building 1&#x2F;1 modules 0 activeℹ ｢wds｣: Project is running at http:&#x2F;&#x2F;localhost:9000&#x2F;</span><br><span class="line">ℹ ｢wds｣: webpack output is served from &#x2F;dist&#x2F;</span><br><span class="line">ℹ ｢wds｣: Content not from webpack is served from &#x2F;home&#x2F;justforlxz&#x2F;Projects&#x2F;VueBlog&#x2F;dist</span><br><span class="line">ℹ ｢wdm｣: Hash: ff9005d9f6ffafd11cd4</span><br><span class="line">Version: webpack 4.41.0</span><br><span class="line">Time: 2938ms</span><br><span class="line">Built at: 11&#x2F;25&#x2F;2019 6:03:50 PM</span><br><span class="line">  Asset      Size  Chunks             Chunk Names</span><br><span class="line">main.js  2.09 MiB    main  [emitted]  main</span><br><span class="line">Entrypoint main &#x3D; main.js</span><br><span class="line">[0] multi (webpack)-dev-server&#x2F;client?http:&#x2F;&#x2F;localhost:9000 (webpack)&#x2F;hot&#x2F;dev-server.js .&#x2F;src&#x2F;main.ts 52 bytes &#123;main&#125; [built]</span><br></pre></td></tr></table></figure>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs gradle"><span class="hljs-number">10</span>% building <span class="hljs-number">1</span><span class="hljs-regexp">/1 modules 0 activeℹ ｢wds｣: Project is running at http:/</span><span class="hljs-regexp">/localhost:9000/</span><br>ℹ ｢wds｣: webpack output is served <span class="hljs-keyword">from</span> <span class="hljs-regexp">/dist/</span><br>ℹ ｢wds｣: Content not <span class="hljs-keyword">from</span> webpack is served <span class="hljs-keyword">from</span> <span class="hljs-regexp">/home/</span>justforlxz<span class="hljs-regexp">/Projects/</span>VueBlog/dist<br>ℹ ｢wdm｣: Hash: ff9005d9f6ffafd11cd4<br>Version: webpack <span class="hljs-number">4.41</span>.<span class="hljs-number">0</span><br>Time: <span class="hljs-number">2938</span>ms<br>Built at: <span class="hljs-number">11</span><span class="hljs-regexp">/25/</span><span class="hljs-number">2019</span> <span class="hljs-number">6</span>:<span class="hljs-number">03</span>:<span class="hljs-number">50</span> PM<br>  Asset      <span class="hljs-keyword">Size</span>  Chunks             Chunk Names<br>main.js  <span class="hljs-number">2.09</span> MiB    main  [emitted]  main<br>Entrypoint main = main.js<br>[<span class="hljs-number">0</span>] multi (webpack)-dev-server<span class="hljs-regexp">/client?http:/</span><span class="hljs-regexp">/localhost:9000 (webpack)/</span>hot<span class="hljs-regexp">/dev-server.js ./</span>src/main.ts <span class="hljs-number">52</span> bytes &#123;main&#125; [built]<br></code></pre></td></tr></table></figure>
 
 <p>我们就可以通过localhost:9000来访问我们的应用了。</p>
 <p>需要注意的是，由于我们经常把内容输出到dist目录，但是webpack运行是在项目目录的，访问webpack生成在dist目录的main.js时，需要写上相对于webpack的目录，例如dist/main.js。否则会找不到文件。</p>
@@ -279,262 +268,346 @@
 <h2 id="配置webpack"><a href="#配置webpack" class="headerlink" title="配置webpack"></a>配置webpack</h2><p>webpack-dev-server支持在服务内部调用中间件对数据进行处理。</p>
 <h3 id="devServer-before"><a href="#devServer-before" class="headerlink" title="devServer.before"></a>devServer.before</h3><p><code>function (app, server)</code></p>
 <p>在服务内部的所有其他中间件之前， 提供执行自定义中间件的功能。 这可以用来配置自定义处理程序，例如：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">  &#x2F;&#x2F;...</span><br><span class="line">  devServer: &#123;</span><br><span class="line">    before: function(app, server) &#123;</span><br><span class="line">      app.get(&#39;&#x2F;some&#x2F;path&#39;, function(req, res) &#123;</span><br><span class="line">        res.json(&#123; custom: &#39;response&#39; &#125;);</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-built_in">module</span>.exports = &#123;<br>  <span class="hljs-comment">//...</span><br>  <span class="hljs-attr">devServer</span>: &#123;<br>    <span class="hljs-attr">before</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">app, server</span>) </span>&#123;<br>      app.get(<span class="hljs-string">&#x27;/some/path&#x27;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>&#123;<br>        res.json(&#123; <span class="hljs-attr">custom</span>: <span class="hljs-string">&#x27;response&#x27;</span> &#125;);<br>      &#125;);<br>    &#125;<br>  &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
 
 <h3 id="devServer-after"><a href="#devServer-after" class="headerlink" title="devServer.after"></a>devServer.after</h3><p>同devServer.before，在服务内部的所有中间件之后，提供执行自定义中间件的功能。</p>
 <h3 id="devServer-allowedHosts"><a href="#devServer-allowedHosts" class="headerlink" title="devServer.allowedHosts"></a>devServer.allowedHosts</h3><p>允许添加白名单服务，允许一些开发服务器访问。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">  &#x2F;&#x2F;...</span><br><span class="line">  devServer: &#123;</span><br><span class="line">    allowedHosts: [</span><br><span class="line">      &#39;host.com&#39;,</span><br><span class="line">      &#39;subdomain.host.com&#39;,</span><br><span class="line">      &#39;subdomain2.host.com&#39;,</span><br><span class="line">      &#39;host2.com&#39;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">module</span>.<span class="hljs-keyword">exports</span> = &#123;<br>  <span class="hljs-comment">//...</span><br>  devServer: &#123;<br>    allowedHosts: [<br>      <span class="hljs-string">&#x27;host.com&#x27;</span>,<br>      <span class="hljs-string">&#x27;subdomain.host.com&#x27;</span>,<br>      <span class="hljs-string">&#x27;subdomain2.host.com&#x27;</span>,<br>      <span class="hljs-string">&#x27;host2.com&#x27;</span><br>    ]<br>  &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
 
 <p>模仿 django 的 ALLOWED_HOSTS，以 . 开头的值可以用作子域通配符。.host.com 将会匹配 host.com, <a target="_blank" rel="noopener" href="http://www.host.com/">www.host.com</a> 和 host.com 的任何其他子域名。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">  &#x2F;&#x2F;...</span><br><span class="line">  devServer: &#123;</span><br><span class="line">    &#x2F;&#x2F; 这实现了与第一个示例相同的效果，</span><br><span class="line">    &#x2F;&#x2F; 如果新的子域名需要访问 dev server，</span><br><span class="line">    &#x2F;&#x2F; 则无需更新您的配置</span><br><span class="line">    allowedHosts: [</span><br><span class="line">      &#39;.host.com&#39;,</span><br><span class="line">      &#39;host2.com&#39;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs awk">module.exports = &#123;<br>  <span class="hljs-regexp">//</span>...<br>  devServer: &#123;<br>    <span class="hljs-regexp">//</span> 这实现了与第一个示例相同的效果，<br>    <span class="hljs-regexp">//</span> 如果新的子域名需要访问 dev server，<br>    <span class="hljs-regexp">//</span> 则无需更新您的配置<br>    allowedHosts: [<br>      <span class="hljs-string">&#x27;.host.com&#x27;</span>,<br>      <span class="hljs-string">&#x27;host2.com&#x27;</span><br>    ]<br>  &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
 
 <h3 id="devServer-clientLogLevel"><a href="#devServer-clientLogLevel" class="headerlink" title="devServer.clientLogLevel"></a>devServer.clientLogLevel</h3><p><code>string: &#39;none&#39; | &#39;info&#39; | &#39;error&#39; | &#39;warning&#39;</code></p>
 <p>当使用内联模式(inline mode)时，会在开发工具(DevTools)的控制台(console)显示消息，例如：在重新加载之前，在一个错误之前，或者 模块热替换(Hot Module Replacement) 启用时。默认值是 info。</p>
 <p>devServer.clientLogLevel 可能会显得很繁琐，你可以通过将其设置为 ‘none’ 来关闭 log。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">  &#x2F;&#x2F;...</span><br><span class="line">  devServer: &#123;</span><br><span class="line">    clientLogLevel: &#39;none&#39;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">module</span>.<span class="hljs-keyword">exports</span> = &#123;<br>  <span class="hljs-comment">//...</span><br>  devServer: &#123;<br>    clientLogLevel: <span class="hljs-string">&#x27;none&#x27;</span><br>  &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
 
 <h3 id="devServer-color-只用于命令行工具-CLI"><a href="#devServer-color-只用于命令行工具-CLI" class="headerlink" title="devServer.color  - 只用于命令行工具(CLI)"></a>devServer.color  - 只用于命令行工具(CLI)</h3><p>只在终端下启用，启用/禁用控制台的彩色输出。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">webpack-dev-server --color</span><br></pre></td></tr></table></figure>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">webpack-dev-<span class="hljs-keyword">server</span> <span class="hljs-comment">--color</span><br></code></pre></td></tr></table></figure>
 
 <h3 id="devServer-compress"><a href="#devServer-compress" class="headerlink" title="devServer.compress"></a>devServer.compress</h3><p><code>boolean</code></p>
 <p>一切服务都开启gzip压缩。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">  &#x2F;&#x2F;...</span><br><span class="line">  devServer: &#123;</span><br><span class="line">    compress: true</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">module</span>.<span class="hljs-keyword">exports</span> = &#123;<br>  <span class="hljs-comment">//...</span><br>  devServer: &#123;<br>    compress: <span class="hljs-keyword">true</span><br>  &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
 
 <h3 id="devServer-contentBase"><a href="#devServer-contentBase" class="headerlink" title="devServer.contentBase"></a>devServer.contentBase</h3><p><code>boolean: false string [string] number</code></p>
 <p>告诉服务器从哪个目录中提供内容。只有在你想要提供静态文件时才需要。devServer.publicPath 将用于确定应该从哪里提供 bundle，并且此选项优先。</p>
 <p>默认情况下，将使用当前工作目录作为提供内容的目录。将其设置为 false 以禁用 contentBase。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">  &#x2F;&#x2F;...</span><br><span class="line">  devServer: &#123;</span><br><span class="line">    contentBase: path.join(__dirname, &#39;public&#39;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">module</span>.<span class="hljs-keyword">exports</span> = &#123;<br>  <span class="hljs-comment">//...</span><br>  devServer: &#123;<br>    contentBase: path.join(__dirname, <span class="hljs-string">&#x27;public&#x27;</span>)<br>  &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
 
 <p>也可以从多个目录提供内容：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">  &#x2F;&#x2F;...</span><br><span class="line">  devServer: &#123;</span><br><span class="line">    contentBase: [path.join(__dirname, &#39;public&#39;), path.join(__dirname, &#39;assets&#39;)]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sqf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sqf">module.exports = &#123;<br>  <span class="hljs-comment">//...</span><br>  devServer: &#123;<br>    contentBase: [path.<span class="hljs-built_in">join</span>(<span class="hljs-variable">__dirname</span>, <span class="hljs-string">&#x27;public&#x27;</span>), path.<span class="hljs-built_in">join</span>(<span class="hljs-variable">__dirname</span>, <span class="hljs-string">&#x27;assets&#x27;</span>)]<br>  &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
 
 <h3 id="devServer-disableHostCheck"><a href="#devServer-disableHostCheck" class="headerlink" title="devServer.disableHostCheck"></a>devServer.disableHostCheck</h3><p><code>boolean</code></p>
 <p>设置为 true 时，此选项绕过主机检查。不建议这样做，因为不检查主机的应用程序容易受到 DNS 重新连接攻击。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">  &#x2F;&#x2F;...</span><br><span class="line">  devServer: &#123;</span><br><span class="line">    disableHostCheck: true</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">module</span>.<span class="hljs-keyword">exports</span> = &#123;<br>  <span class="hljs-comment">//...</span><br>  devServer: &#123;<br>    disableHostCheck: <span class="hljs-keyword">true</span><br>  &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
 
 <h3 id="devServer-filename"><a href="#devServer-filename" class="headerlink" title="devServer.filename"></a>devServer.filename</h3><p><code>string</code></p>
 <p>在 lazy mode(惰性模式) 中，此选项可减少编译。 默认在 lazy mode(惰性模式)，每个请求结果都会产生全新的编译。使用 filename，可以只在某个文件被请求时编译。</p>
 <p>如果 output.filename 设置为 ‘bundle.js’ ，devServer.filename 用法如下：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">  &#x2F;&#x2F;...</span><br><span class="line">  output: &#123;</span><br><span class="line">    filename: &#39;bundle.js&#39;</span><br><span class="line">  &#125;,</span><br><span class="line">  devServer: &#123;</span><br><span class="line">    lazy: true,</span><br><span class="line">    filename: &#39;bundle.js&#39;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">module</span>.<span class="hljs-keyword">exports</span> = &#123;<br>  <span class="hljs-comment">//...</span><br>  output: &#123;<br>    filename: <span class="hljs-string">&#x27;bundle.js&#x27;</span><br>  &#125;,<br>  devServer: &#123;<br>    lazy: <span class="hljs-keyword">true</span>,<br>    filename: <span class="hljs-string">&#x27;bundle.js&#x27;</span><br>  &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
 
 <p>现在只有在请求了bundle.js时，才会去编译bundle。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>webpack的功能确实很强大，可以针对代码进行各种操作，最终生成出可以适应各种场景的代码，使开发和部署彻底分离开来，开发者可以更加专注项目。</p>
 
             </div>
-            
-    <div class="post__license">
-        <p>
-            <strong>Author: </strong>lxz
-        </p>
-        <p>
-            <strong>
-                Permalink: 
-            </strong>
-            <a href="https://blog.justforlxz.com/2019/11/25/%E4%BD%BF%E7%94%A8webpack-dev-server%E6%9D%A5%E7%9B%91%E5%90%AC%E9%A1%B9%E7%9B%AE%E5%8F%98%E5%8C%96/">https://blog.justforlxz.com/2019/11/25/%E4%BD%BF%E7%94%A8webpack-dev-server%E6%9D%A5%E7%9B%91%E5%90%AC%E9%A1%B9%E7%9B%AE%E5%8F%98%E5%8C%96/</a>
-        </p>
-        
-    </div>
- 
-            <div class="post-footer__meta">
-    <p>
-        updated at 2021-05-10
-    </p>
-</div> 
-            <div class="post-meta__cats">
-    
-        <a href="/categories/Vue/" class="post-cats__link button">Vue</a>
-    
-    
-        <a href="/tags/Vue/" class="post-tags__link button"># Vue</a>
-    
-</div> 
-        </article>
-        
-            <div class="post__comments content-card" id="comment">
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
                 
-    <h4>Comments</h4>
-    
-    
-    
-    <div id="valine_container" class="valine_thread"></div>
-
-    
-    
-    
-    
-    
-    
-
-
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Vue/">Vue</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Vue/">Vue</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/12/08/vue-transitions/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">添加Vue动画</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/10/24/%E7%BB%99Archlinux%E5%BC%80%E5%90%AFBFQ%E5%92%8CMuQSS/">
+                        <span class="hidden-mobile">给Archlinux开启BFQ和MuQSS</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
             </div>
-        
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"jwJxh95ly6NdjTRluyKYXm6G-gzGzoHsz","appKey":"lagqr7doy2slbm7oAMGoogpg","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
     </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
 
 
-</main>
-
-            <footer class="footer">
     
 
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
 
     
-     
- 
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
 
- 
     
-        
-        <p class="footer-copyright">
-            Copyright&nbsp;©&nbsp;2021&nbsp;<a href="/">小竹&#39;s blog</a>
-        </p>
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
     
     
-    <p>Powered by <a href="https://hexo.io" target="_blank">Hexo</a> | Theme - <a href="https://github.com/ChrAlpha/hexo-theme-cards" target="_blank">Cards</a></p>
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+  <!-- 备案信息 -->
+  <div class="beian">
+    <span>
+      <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+        豫ICP备19045379号-1
+      </a>
+    </span>
+    
+  </div>
+
+
+  
 </footer>
 
-        </div>
-        
-    <script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.1.0/dist/lazyload.min.js"></script>
-    <script>
-        window.lazyLoadOptions = {
-            elements_selector: ".lazy",
-            threshold: 0
-        };
-    </script>
- 
 
- 
-    <script>
-        window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-        ga('create', 'UA-129024325-1', 'auto');
-        ga('send', 'pageview');
-    </script>
-    <script async src="https://www.google-analytics.com/analytics.js"></script>
- 
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
 
- 
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
 
- 
-    <script>
-        var _hmt = _hmt || [];
-        (function() {
-            var hm = document.createElement('script');
-            hm.src = 'https://hm.baidu.com/hm.js?49e5979358cb9ca19e5e56fc4adc4a98';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
-    </script>
- 
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
 
   
 
 
 
- 
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
 
 
-    
- 
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
 
 
-    
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
 
-    
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.4.1/dist/jquery.fancybox.min.css">
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
 
-    
-<script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.4.1/dist/jquery.fancybox.min.js"></script>
 
-    <script>
-        let lazyloadT = Boolean('true'),
-            auto_fancybox = Boolean('true')
-        if (auto_fancybox) {
-            $(".post__content").find('img').each(function () {
-                var element = document.createElement("a");
-                $(element).attr("data-fancybox", "gallery");
-                $(element).attr("href", $(this).attr("src"));
-                if (lazyloadT) {
-                    $(element).attr("href", $(this).attr("data-srcset"));
-                }
-                $(this).wrap(element);
-            });
-        } else {
-            $(".post__content").find("fancybox").find('img').each(function () {
-                var element = document.createElement("a");
-                $(element).attr("data-fancybox", "gallery");
-                $(element).attr("href", $(this).attr("src"));
-                if (lazyloadT) {
-                    $(element).attr("href", $(this).attr("data-srcset"));
-                }
-                $(this).wrap(element);
-            });
-        }
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?49e5979358cb9ca19e5e56fc4adc4a98";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
     </script>
- 
+  
 
- 
-    <script defer src="/js/b2t.js"></script>
- 
-
- 
-
- 
-
-
-    
-
-    
-    
-    
-    <script>
-        function loadComment() {
-            let e;
-            (e = document.createElement("script")).src = 'https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js',
-            document.body.appendChild(e);
-            e.onload = () => {
-                var valineConfig = {"appId":"jwJxh95ly6NdjTRluyKYXm6G-gzGzoHsz","appKey":"lagqr7doy2slbm7oAMGoogpg","placeholder":null,"path":null,"avatar":null,"meta":["nick","mail","link"],"pageSize":null,"lang":null,"visitor":null,"highlight":null,"avatarForce":null,"recordIP":null,"serverURLs":"https://jwjxh95l.lc-cn-n1-shared.com","enableQQ":null,"requiredFields":["nick","mail"],"emojiCDN":null,"emojiMaps":null};
-                valineConfig.el = '#valine_container';
-                for (var i in valineConfig) {
-                    if (valineConfig[i] === null) delete valineConfig[i];
-                }
-                new Valine(valineConfig);
-            };
-        }
-    
-        var runningOnBrowser = typeof window !== "undefined";
-        var isBot = runningOnBrowser && !("onscroll" in window) || typeof navigator !== "undefined" && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent);
-        var supportsIntersectionObserver = runningOnBrowser && "IntersectionObserver" in window;
-    
-        setTimeout(function () {
-            if (!isBot && supportsIntersectionObserver) {
-                var comment_observer = new IntersectionObserver(function(entries) {
-                    if (entries[0].isIntersecting) {
-                        loadComment();
-                        comment_observer.disconnect();
-                    }
-                }, { threshold: [0] });
-                comment_observer.observe(document.getElementById('comment'));
-            } else {
-                loadComment();
-            }
-        }, 1);
+  
+    <!-- Google Analytics -->
+    <script defer>
+      window.ga = window.ga || function () { (ga.q = ga.q || []).push(arguments) };
+      ga.l = +new Date;
+      ga('create', 'UA-129024325-1', 'auto');
+      ga('send', 'pageview');
     </script>
+    <script async src='https://www.google-analytics.com/analytics.js'></script>
+  
 
+  
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
+  
 
-    
+  
+
+  
 
 
 
-    </body>
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
 </html>

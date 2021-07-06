@@ -1,281 +1,270 @@
+
+
 <!DOCTYPE html>
-<html lang="zh">
-    <head>
-    <meta charset="utf-8">
-
-    
-
-    <!-- 渲染优化 -->
-    <meta name="renderer" content="webkit">
-    <meta name="force-rendering" content="webkit">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <meta name="HandheldFriendly" content="True" >
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
-    <!--icon-->
-
-    <link rel="shortcut icon" type='image/x-icon' href="/favicon.ico">
-
-
-    <!-- meta -->
-
-
-<title>CPP项目的一些坑 | 小竹&#39;s blog</title>
-
-
-    <meta name="keywords" content="C++">
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
 
 
 
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="本篇文章记录这几年项目中C++的一些问题和优化方法。需要注意的是，代码优化没有一本万利的方法，只能见招拆招，而且还要避免过早优化等问题，代码优化一定是要中后期才可以，而且不要为了优化而优化。">
+  <meta name="author" content="小竹">
+  <meta name="keywords" content="">
+  
+  <title>CPP项目的一些坑 - 小竹&#39;s blog</title>
 
-    <!-- OpenGraph -->
- 
-    <meta name="description" content="本篇文章记录这几年项目中C++的一些问题和优化方法。需要注意的是，代码优化没有一本万利的方法，只能见招拆招，而且还要避免过早优化等问题，代码优化一定是要中后期才可以，而且不要为了优化而优化。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="CPP项目的一些坑">
-<meta property="og:url" content="https://blog.justforlxz.com/2020/06/15/CPP%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91/index.html">
-<meta property="og:site_name" content="小竹&#39;s blog">
-<meta property="og:description" content="本篇文章记录这几年项目中C++的一些问题和优化方法。需要注意的是，代码优化没有一本万利的方法，只能见招拆招，而且还要避免过早优化等问题，代码优化一定是要中后期才可以，而且不要为了优化而优化。">
-<meta property="og:locale">
-<meta property="article:published_time" content="2020-06-15T11:11:40.000Z">
-<meta property="article:modified_time" content="2021-05-10T09:31:48.543Z">
-<meta property="article:author" content="小竹">
-<meta property="article:tag" content="C++">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:creator" content="@justforlxz">
-
-
-    
-<link rel="stylesheet" href="/css/style/main.css">
- 
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
 
-    
-<link rel="stylesheet" href="/css/style/dark.css">
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
 
-    
-<script src="/js/darkmode.js"></script>
-
-
-
+  
     
     
-        <link rel="stylesheet" id="hl-default-theme" href="/css/highlight/default.css" media="none" onload="if(getComputedStyle(document.documentElement).getPropertyValue('--color-mode').indexOf('dark')===-1)this.media='all'">
-        
-            <link rel="stylesheet" id="hl-dark-theme" href="/css/highlight/dark.css" media="none" onload="if(getComputedStyle(document.documentElement).getPropertyValue('--color-mode').indexOf('dark')!==-1)this.media='all'">
-        
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
     
+  
 
-    
-    
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
 
-     
 
-    <!-- custom head -->
 
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"blog.justforlxz.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"49e5979358cb9ca19e5e56fc4adc4a98","google":"UA-129024325-1","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
 <meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="小竹's blog" type="application/atom+xml">
 </head>
 
-    <body>
-        <div id="app">
-            <header class="header">
-    <div class="header__left">
-        <a href="/" class="button">
-            <span class="logo__text">
-                小竹's blog
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>小竹's blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="CPP项目的一些坑">
+              
             </span>
-        </a>
-    </div>
-    <div class="header__right">
-        
-            <div class="navbar__menus">
-                
-                    <a href="/" class="navbar-menu button">
-                        首页
-                    </a>
-                
-                    <a href="/tags/" class="navbar-menu button">
-                        标签
-                    </a>
-                
-                    <a href="/categories/" class="navbar-menu button">
-                        分类
-                    </a>
-                
-                    <a href="/archives/" class="navbar-menu button">
-                        归档
-                    </a>
-                
-                    <a href="/friends/" class="navbar-menu button">
-                        友链
-                    </a>
-                
-                    <a href="/about/" class="navbar-menu button">
-                        关于
-                    </a>
-                
-            </div>
-        
-        
-        
-    <a href="/search/" id="btn-search">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="24" height="24" fill="currentColor" stroke="currentColor" stroke-width="32"><path d="M192 448c0-141.152 114.848-256 256-256s256 114.848 256 256-114.848 256-256 256-256-114.848-256-256z m710.624 409.376l-206.88-206.88A318.784 318.784 0 0 0 768 448c0-176.736-143.264-320-320-320S128 271.264 128 448s143.264 320 320 320a318.784 318.784 0 0 0 202.496-72.256l206.88 206.88 45.248-45.248z"></path></svg>
-    </a>
 
-
-        
-        
-    <a href="javaScript:void(0);" id="btn-toggle-dark">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-    </a>
-
-
-         
-    <a href="javaScript:void(0);" id="b2t" aria-label="Back to Top" title="Back to Top">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width='32' height='32' fill="currentColor" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M13.889,11.611c-0.17,0.17-0.443,0.17-0.612,0l-3.189-3.187l-3.363,3.36c-0.171,0.171-0.441,0.171-0.612,0c-0.172-0.169-0.172-0.443,0-0.611l3.667-3.669c0.17-0.17,0.445-0.172,0.614,0l3.496,3.493C14.058,11.167,14.061,11.443,13.889,11.611 M18.25,10c0,4.558-3.693,8.25-8.25,8.25c-4.557,0-8.25-3.692-8.25-8.25c0-4.557,3.693-8.25,8.25-8.25C14.557,1.75,18.25,5.443,18.25,10 M17.383,10c0-4.07-3.312-7.382-7.383-7.382S2.618,5.93,2.618,10S5.93,17.381,10,17.381S17.383,14.07,17.383,10"></path>
-        </svg>
-    </a>
-
-
-        
-            <a class="dropdown-icon button" id="btn-dropdown">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width='24' height='24' fill="none" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round">
-                    <path fill="currentColor" d="M3.314,4.8h13.372c0.41,0,0.743-0.333,0.743-0.743c0-0.41-0.333-0.743-0.743-0.743H3.314c-0.41,0-0.743,0.333-0.743,0.743C2.571,4.467,2.904,4.8,3.314,4.8z M16.686,15.2H3.314c-0.41,0-0.743,0.333-0.743,0.743s0.333,0.743,0.743,0.743h13.372c0.41,0,0.743-0.333,0.743-0.743S17.096,15.2,16.686,15.2z M16.686,9.257H3.314c-0.41,0-0.743,0.333-0.743,0.743s0.333,0.743,0.743,0.743h13.372c0.41,0,0.743-0.333,0.743-0.743S17.096,9.257,16.686,9.257z"></path>
-                </svg>
-            </a>
-            <div class="dropdown-menus" id="dropdown-menus">
-                <a class="dropback-icon button" id="btn-dropback">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width='24' height='24' fill="none" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round">
-                        <path fill="currentColor" d="M11.469,10l7.08-7.08c0.406-0.406,0.406-1.064,0-1.469c-0.406-0.406-1.063-0.406-1.469,0L10,8.53l-7.081-7.08c-0.406-0.406-1.064-0.406-1.469,0c-0.406,0.406-0.406,1.063,0,1.469L8.531,10L1.45,17.081c-0.406,0.406-0.406,1.064,0,1.469c0.203,0.203,0.469,0.304,0.735,0.304c0.266,0,0.531-0.101,0.735-0.304L10,11.469l7.08,7.081c0.203,0.203,0.469,0.304,0.735,0.304c0.267,0,0.532-0.101,0.735-0.304c0.406-0.406,0.406-1.064,0-1.469L11.469,10z"></path>
-                    </svg>
-                </a>
-                
-                    <a href="/" class="dropdown-menu button">
-                        首页
-                    </a>
-                
-                    <a href="/tags/" class="dropdown-menu button">
-                        标签
-                    </a>
-                
-                    <a href="/categories/" class="dropdown-menu button">
-                        分类
-                    </a>
-                
-                    <a href="/archives/" class="dropdown-menu button">
-                        归档
-                    </a>
-                
-                    <a href="/friends/" class="dropdown-menu button">
-                        友链
-                    </a>
-                
-                    <a href="/about/" class="dropdown-menu button">
-                        关于
-                    </a>
-                
-            </div>
-            <script>
-                document.getElementById('btn-dropdown').addEventListener('click', () => {
-                    const dd = document.getElementById('dropdown-menus');
-                    requestAnimationFrame(() => {
-                        dd.style.display = 'flex';
-                        requestAnimationFrame(() => {
-                            dd.style.transform = 'translateY(0)';
-                            dd.style.opacity = '1';
-                        });
-                    });
-                });
-                document.getElementById('btn-dropback').addEventListener('click', () => {
-                    const dd = document.getElementById('dropdown-menus');
-                    dd.style.transform = 'translateY(2.25rem)';                    
-                    dd.style.opacity = '0';
-                    setTimeout(() => {dd.style.display = 'none';}, 350);
-                });
-            </script>
-        
-    </div>
-</header>
-
-
-            <main class="main">
-    
-<div class="post-title">
-    <h1 class="post-title__text">
-        CPP项目的一些坑
-    </h1>
-    <div class="post-title__meta">
-        <a href="/archives/2020/06/" class="post-meta__date button">
-    2020-06-15
-</a>
-        
- 
-        
-    
-    
-
-
- 
-
- 
-    </div>
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-06-15 11:11" pubdate>
+        2020年6月15日 上午
+      </time>
+    </span>
+  
 </div>
 
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2k 字
+    </span>
+  
 
-    <div class="post__with-side">
-        <aside class="post-side">
-            <div class="post-side__toc">
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#const%E5%92%8Cconst-amp"><span class="toc-number">1.</span> <span class="toc-text">const和const &amp;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B%E5%BC%BA%E8%BD%AC"><span class="toc-number">2.</span> <span class="toc-text">类型强转</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%87%E5%A4%9A%E7%9A%84%E5%B5%8C%E5%A5%97"><span class="toc-number">3.</span> <span class="toc-text">过多的嵌套</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF"><span class="toc-number">4.</span> <span class="toc-text">循环</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F"><span class="toc-number">5.</span> <span class="toc-text">内存泄漏</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8B%AC%E5%8D%A0%E6%8C%87%E9%92%88"><span class="toc-number">5.1.</span> <span class="toc-text">独占指针</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B1%E4%BA%AB%E6%8C%87%E9%92%88"><span class="toc-number">5.2.</span> <span class="toc-text">共享指针</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%B1%E5%BC%95%E7%94%A8%E6%8C%87%E9%92%88"><span class="toc-number">5.2.1.</span> <span class="toc-text">弱引用指针</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E5%88%A4%E6%96%AD%E6%9D%A1%E4%BB%B6"><span class="toc-number">6.</span> <span class="toc-text">优化判断条件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%92%E5%BA%8F"><span class="toc-number">7.</span> <span class="toc-text">排序</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8std-sort"><span class="toc-number">7.1.</span> <span class="toc-text">使用std::sort</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%AE%B9%E5%99%A8"><span class="toc-number">7.2.</span> <span class="toc-text">使用容器</span></a></li></ol></li></ol>
-            </div>
-        </aside>
-        <article class="post content-card">
-            <div class="post__header">
-    <div class="post__expire" id="post-expired-notify">
-        <p>
-            This article was last updated on <span id="expire-date"></span> days ago, the information described in the article may be outdated.
-        </p>
-    </div>
-    <script>
-        (() => {
-            var update = Date.parse("2021-05-10"),
-                date = new Date(),
-                now = date.getTime(),
-                expire = now - update,
-                expire_days = Math.floor(expire/(24*3600*1000));
-            if (expire_days >= 120) {
-                document.querySelectorAll('#expire-date')[0].innerHTML = expire_days;
-                document.querySelectorAll('#post-expired-notify')[0].style.display = 'block';
-            }
-        })();
-    </script>
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      23
+       分钟
+    </span>
+  
+
+  
+  
 </div>
-            <div class="post__content">
-                <p>本篇文章记录这几年项目中C++的一些问题和优化方法。需要注意的是，代码优化没有一本万利的方法，只能见招拆招，而且还要避免过早优化等问题，代码优化一定是要中后期才可以，而且不要为了优化而优化。</p>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">CPP项目的一些坑</h1>
+            
+            <div class="markdown-body">
+              <p>本篇文章记录这几年项目中C++的一些问题和优化方法。需要注意的是，代码优化没有一本万利的方法，只能见招拆招，而且还要避免过早优化等问题，代码优化一定是要中后期才可以，而且不要为了优化而优化。</p>
 <span id="more"></span>
 
 <h2 id="const和const-amp"><a href="#const和const-amp" class="headerlink" title="const和const &amp;"></a>const和const &amp;</h2><p>在接收一个返回值或者声明局部只读变量时没有使用const修饰。const的目的不仅仅是为了只读，更多的是编译器可以在此处提供优化。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">QRect rect = m_displayInter-&gt;<span class="built_in">primaryRawRect</span>();</span><br><span class="line">qreal scale = qApp-&gt;<span class="built_in">primaryScreen</span>()-&gt;<span class="built_in">devicePixelRatio</span>();</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs C++">QRect rect = m_displayInter-&gt;<span class="hljs-built_in">primaryRawRect</span>();<br>qreal scale = qApp-&gt;<span class="hljs-built_in">primaryScreen</span>()-&gt;<span class="hljs-built_in">devicePixelRatio</span>();<br></code></pre></td></tr></table></figure>
 
 <p>在这两行例子中，react和scale都在当前函数内没有任何修改，而且不应该修改，需要添加const来修饰只读，并且QRect应该使用&amp;来减少内存复制带来的额外影响。</p>
 <h2 id="类型强转"><a href="#类型强转" class="headerlink" title="类型强转"></a>类型强转</h2><p>在部分代码中，经常能看到C风格的代码强转，应当根据具体情况使用static_cast、dynamic_cast和reinterpret_cast。</p>
 <p>static_cast是使用的比较多的cast，经常用于派生类和基类之间转换。dynamic_cast也用于派生类和基类的转换，如果类型T是指针类型，若转换失败，则返回T类型的空指针，如果时T是引用类型，则会抛出异常，返回std::bad_cast。reinterpret_cast并不会做实际的转换，只会在编译时进行检查，如果不能进行cast转换，则编译报错。</p>
 <h2 id="过多的嵌套"><a href="#过多的嵌套" class="headerlink" title="过多的嵌套"></a>过多的嵌套</h2><p>过多的嵌套会严重影响代码阅读，经常出现只有if通过才会进入执行的情况，这种情况应该修改为不通过就不要继续执行，或者安排合理的if将条件限制在之前。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">BluetoothWorker::setAdapterPowered</span><span class="params">(<span class="keyword">const</span> Adapter *adapter, <span class="keyword">const</span> <span class="keyword">bool</span> &amp;powered)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">QDBusObjectPath <span class="title">path</span><span class="params">(adapter-&gt;id())</span></span>;</span><br><span class="line">    <span class="comment">//关闭蓝牙之前删除历史蓝牙设备列表，确保完全是删除后再设置开关</span></span><br><span class="line">    <span class="keyword">if</span> (!powered) &#123;</span><br><span class="line">        QDBusPendingCall call = m_bluetoothInter-&gt;<span class="built_in">ClearUnpairedDevice</span>();</span><br><span class="line">        QDBusPendingCallWatcher *watcher = <span class="keyword">new</span> <span class="built_in">QDBusPendingCallWatcher</span>(call, <span class="keyword">this</span>);</span><br><span class="line">        <span class="built_in">connect</span>(watcher, &amp;QDBusPendingCallWatcher::finished, [ = ] &#123;</span><br><span class="line">            <span class="keyword">if</span> (!call.<span class="built_in">isError</span>()) &#123;</span><br><span class="line">                QDBusPendingCall adapterPoweredOffCall  = m_bluetoothInter-&gt;<span class="built_in">SetAdapterPowered</span>(path, <span class="literal">false</span>);</span><br><span class="line">                QDBusPendingCallWatcher *watcher = <span class="keyword">new</span> <span class="built_in">QDBusPendingCallWatcher</span>(adapterPoweredOffCall, <span class="keyword">this</span>);</span><br><span class="line">                <span class="built_in">connect</span>(watcher, &amp;QDBusPendingCallWatcher::finished, [<span class="keyword">this</span>, adapterPoweredOffCall, adapter] &#123;</span><br><span class="line">                    <span class="keyword">if</span> (!adapterPoweredOffCall.<span class="built_in">isError</span>()) &#123;</span><br><span class="line">                        <span class="built_in">setAdapterDiscoverable</span>(adapter-&gt;<span class="built_in">id</span>());</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        <span class="built_in">qWarning</span>() &lt;&lt; adapterPoweredOffCall.<span class="built_in">error</span>().<span class="built_in">message</span>();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="built_in">qWarning</span>() &lt;&lt; call.<span class="built_in">error</span>().<span class="built_in">message</span>();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        QDBusPendingCall adapterPoweredOnCall  = m_bluetoothInter-&gt;<span class="built_in">SetAdapterPowered</span>(path, <span class="literal">true</span>);</span><br><span class="line">        QDBusPendingCallWatcher *watcher = <span class="keyword">new</span> <span class="built_in">QDBusPendingCallWatcher</span>(adapterPoweredOnCall, <span class="keyword">this</span>);</span><br><span class="line">        <span class="built_in">connect</span>(watcher, &amp;QDBusPendingCallWatcher::finished, [<span class="keyword">this</span>, adapterPoweredOnCall, adapter] &#123;</span><br><span class="line">            <span class="keyword">if</span> (!adapterPoweredOnCall.<span class="built_in">isError</span>()) &#123;</span><br><span class="line">                <span class="built_in">setAdapterDiscoverable</span>(adapter-&gt;<span class="built_in">id</span>());</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="built_in">qWarning</span>() &lt;&lt; adapterPoweredOnCall.<span class="built_in">error</span>().<span class="built_in">message</span>();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BluetoothWorker::setAdapterPowered</span><span class="hljs-params">(<span class="hljs-keyword">const</span> Adapter *adapter, <span class="hljs-keyword">const</span> <span class="hljs-keyword">bool</span> &amp;powered)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-function">QDBusObjectPath <span class="hljs-title">path</span><span class="hljs-params">(adapter-&gt;id())</span></span>;<br>    <span class="hljs-comment">//关闭蓝牙之前删除历史蓝牙设备列表，确保完全是删除后再设置开关</span><br>    <span class="hljs-keyword">if</span> (!powered) &#123;<br>        QDBusPendingCall call = m_bluetoothInter-&gt;<span class="hljs-built_in">ClearUnpairedDevice</span>();<br>        QDBusPendingCallWatcher *watcher = <span class="hljs-keyword">new</span> <span class="hljs-built_in">QDBusPendingCallWatcher</span>(call, <span class="hljs-keyword">this</span>);<br>        <span class="hljs-built_in">connect</span>(watcher, &amp;QDBusPendingCallWatcher::finished, [ = ] &#123;<br>            <span class="hljs-keyword">if</span> (!call.<span class="hljs-built_in">isError</span>()) &#123;<br>                QDBusPendingCall adapterPoweredOffCall  = m_bluetoothInter-&gt;<span class="hljs-built_in">SetAdapterPowered</span>(path, <span class="hljs-literal">false</span>);<br>                QDBusPendingCallWatcher *watcher = <span class="hljs-keyword">new</span> <span class="hljs-built_in">QDBusPendingCallWatcher</span>(adapterPoweredOffCall, <span class="hljs-keyword">this</span>);<br>                <span class="hljs-built_in">connect</span>(watcher, &amp;QDBusPendingCallWatcher::finished, [<span class="hljs-keyword">this</span>, adapterPoweredOffCall, adapter] &#123;<br>                    <span class="hljs-keyword">if</span> (!adapterPoweredOffCall.<span class="hljs-built_in">isError</span>()) &#123;<br>                        <span class="hljs-built_in">setAdapterDiscoverable</span>(adapter-&gt;<span class="hljs-built_in">id</span>());<br>                    &#125; <span class="hljs-keyword">else</span> &#123;<br>                        <span class="hljs-built_in">qWarning</span>() &lt;&lt; adapterPoweredOffCall.<span class="hljs-built_in">error</span>().<span class="hljs-built_in">message</span>();<br>                    &#125;<br>                &#125;);<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-built_in">qWarning</span>() &lt;&lt; call.<span class="hljs-built_in">error</span>().<span class="hljs-built_in">message</span>();<br>            &#125;<br>        &#125;);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        QDBusPendingCall adapterPoweredOnCall  = m_bluetoothInter-&gt;<span class="hljs-built_in">SetAdapterPowered</span>(path, <span class="hljs-literal">true</span>);<br>        QDBusPendingCallWatcher *watcher = <span class="hljs-keyword">new</span> <span class="hljs-built_in">QDBusPendingCallWatcher</span>(adapterPoweredOnCall, <span class="hljs-keyword">this</span>);<br>        <span class="hljs-built_in">connect</span>(watcher, &amp;QDBusPendingCallWatcher::finished, [<span class="hljs-keyword">this</span>, adapterPoweredOnCall, adapter] &#123;<br>            <span class="hljs-keyword">if</span> (!adapterPoweredOnCall.<span class="hljs-built_in">isError</span>()) &#123;<br>                <span class="hljs-built_in">setAdapterDiscoverable</span>(adapter-&gt;<span class="hljs-built_in">id</span>());<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-built_in">qWarning</span>() &lt;&lt; adapterPoweredOnCall.<span class="hljs-built_in">error</span>().<span class="hljs-built_in">message</span>();<br>            &#125;<br>        &#125;);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>这里的代码其实是可以优化的，我们可以通过三元表达式获取某个QDBusPendingCall，这样就可以使用一个QDBusPendingCallWatcher对象，然后将原本的lambda内容提取到其他函数内，在新的lambda中同样使用三元表达式运行对应的函数，这样拆分代码的好处是，阅读代码时的顺序会和执行顺序一致，分支判断对机器和人类都不是太友好，特别是判断体内有很长的代码段，找到else段是一件不容易的事情，通过降低if else块来提高代码可读性。同时应提取相同动作的代码到公共区域，以免将来修改时发现没有将所有的地方都做修改。</p>
 <h2 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h2><p>避免使用数组的方式来访问元素，使用迭代器的方式统一循环方式。</p>
 <p>我注意到有些情况下，有人在for循环内直接定义静态变量，这种方式使用的时候需要注意，静态变量将会永远存在，但是大部分for循环内需要保存的数据都是成员变量，否则内存空间将永远不会释放，对内存有浪费。</p>
 <p>而且经常遇到的问题就是foreach宏和for混用，在语法上就没有统一使用。</p>
 <p>我推荐的方式是for+迭代器的方式，如果是简单遍历，使用原生的foreach语法即可。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">std::list&lt;<span class="keyword">int</span>&gt; list&#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 原生foreach语法，推荐只读遍历使用</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> item: list) &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// for+迭代器，只读遍历</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">auto</span> it = list.<span class="built_in">cbegin</span>(); it != list.<span class="built_in">cend</span>(); ++it) &#123;</span><br><span class="line">    <span class="comment">// it是迭代器对象，需要解引用使用。</span></span><br><span class="line">    *it</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// for+迭代器方式，推荐需要修改容器的长度使用</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">auto</span> it = list.<span class="built_in">begin</span>(); it != list.<span class="built_in">end</span>();) &#123;</span><br><span class="line">    <span class="comment">// 注意，如果要移除某个元素，需要手动下一步</span></span><br><span class="line">    <span class="keyword">if</span> (*it == <span class="number">2</span>) &#123;</span><br><span class="line">        it = list.<span class="built_in">erase</span>(it);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        ++it;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs C++">std::list&lt;<span class="hljs-keyword">int</span>&gt; list&#123; <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>&#125;;<br><br><span class="hljs-comment">// 原生foreach语法，推荐只读遍历使用</span><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> item: list) &#123;<br>    ...<br>&#125;<br><br><span class="hljs-comment">// for+迭代器，只读遍历</span><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> it = list.<span class="hljs-built_in">cbegin</span>(); it != list.<span class="hljs-built_in">cend</span>(); ++it) &#123;<br>    <span class="hljs-comment">// it是迭代器对象，需要解引用使用。</span><br>    *it<br>&#125;<br><br><span class="hljs-comment">// for+迭代器方式，推荐需要修改容器的长度使用</span><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> it = list.<span class="hljs-built_in">begin</span>(); it != list.<span class="hljs-built_in">end</span>();) &#123;<br>    <span class="hljs-comment">// 注意，如果要移除某个元素，需要手动下一步</span><br>    <span class="hljs-keyword">if</span> (*it == <span class="hljs-number">2</span>) &#123;<br>        it = list.<span class="hljs-built_in">erase</span>(it);<br>    &#125;<br>    <span class="hljs-keyword">else</span> &#123;<br>        ++it;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <h2 id="内存泄漏"><a href="#内存泄漏" class="headerlink" title="内存泄漏"></a>内存泄漏</h2><p>经常遇到使用容器将指针保存下来的场景，但是当对象被析构或者容器被清空的时候，有时候会忘记删除内部的对象，或者删除了不该删除的对象。对数据的处理应该保持RAII原则，避免直接使用裸指针，而是通过智能指针将指针保存起来，当最后一个对象不再持有智能指针对象时，智能指针会删除持有的对象，完成内存释放。</p>
 <p>智能指针的类型</p>
 <p>智能指针包含有三种：独占指针<code>unique_ptr</code>、共享指针<code>shared_ptr</code>和弱引用指针<code>week_ptr</code>。</p>
 <h3 id="独占指针"><a href="#独占指针" class="headerlink" title="独占指针"></a>独占指针</h3><p>独占指针<code>std::unique_ptr</code>可以避免对象被转移到其他对象中，如果某个对象持有<code>unique_ptr</code>，则该ptr不允许转移给其他对象，但是可以使用<code>std::move</code>来转移控制权，注意这和普通的转移不一样，<code>unique_ptr</code>禁止的是拷贝，但是没有禁止移动，我们可以转移控制转，<code>unique_ptr</code>保证的是只有一个智能指针持有对象。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">std::unique_ptr&lt;T&gt; p1 = std::<span class="built_in">move</span>(ptr);</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++">std::unique_ptr&lt;T&gt; p1 = std::<span class="hljs-built_in">move</span>(ptr);<br></code></pre></td></tr></table></figure>
 
 <h3 id="共享指针"><a href="#共享指针" class="headerlink" title="共享指针"></a>共享指针</h3><p>共享指针<code>std::shared_ptr</code>顾名思义是用作共享的，和独占指针不同的是，它支持复制，内部通过引用计数来维持对象的生命周期，当没有任何一个对象持有共享指针时，也就意味着没有任何一个对象可以访问到内部对象了，就可以安全的删除对象，释放内存。</p>
 <h4 id="弱引用指针"><a href="#弱引用指针" class="headerlink" title="弱引用指针"></a>弱引用指针</h4><p>弱引用指针<code>std::week_ptr</code>是为了避免两个共享指针相互持有导致引用计数永远不会归零，导致内存永远不释放而提出的解决方案，具体就是弱引用指针不会导致引用计数增加，但是week_ptr同样不支持复制，必须转换为共享指针<code>std::shared_ptr</code>。</p>
@@ -283,226 +272,305 @@
 <h2 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h2><p>发现很多人在需要排序的时候总是使用冒泡算法，我介绍几个比较方便的排序方法。</p>
 <h3 id="使用std-sort"><a href="#使用std-sort" class="headerlink" title="使用std::sort"></a>使用std::sort</h3><p>C++标准库提供了<code>std::sort</code>方法来方便的排序，它有三个参数，第一个参数是容器的begin迭代器，第二个参数是end迭代器，第三个参数接收一个返回值为bool类型的函数，该函数用于实现手动控制排序的判断。</p>
 <p>我们可以提供一个lambda表达式来方便的控制排序，或者提供一个函数指针。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">std::list&lt;<span class="keyword">int</span>&gt; list&#123; <span class="number">10</span>, <span class="number">4</span>, <span class="number">2</span>, <span class="number">5</span> &#125;;</span><br><span class="line"></span><br><span class="line">std::<span class="built_in">sort</span>(list.<span class="built_in">begin</span>(), list.<span class="built_in">end</span>(), [](<span class="keyword">int</span> num1, <span class="keyword">int</span> num2) &#123;</span><br><span class="line">    <span class="keyword">return</span> num1 &lt; num2;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C++">std::list&lt;<span class="hljs-keyword">int</span>&gt; list&#123; <span class="hljs-number">10</span>, <span class="hljs-number">4</span>, <span class="hljs-number">2</span>, <span class="hljs-number">5</span> &#125;;<br><br>std::<span class="hljs-built_in">sort</span>(list.<span class="hljs-built_in">begin</span>(), list.<span class="hljs-built_in">end</span>(), [](<span class="hljs-keyword">int</span> num1, <span class="hljs-keyword">int</span> num2) &#123;<br>    <span class="hljs-keyword">return</span> num1 &lt; num2;<br>&#125;);<br></code></pre></td></tr></table></figure>
 
 <p>这种排序方式是直接对原始容器进行操作的，如果不希望数据成为脏数据，应该先复制一份。</p>
 <h3 id="使用容器"><a href="#使用容器" class="headerlink" title="使用容器"></a>使用容器</h3><p>使用容器的方式比较麻烦一些，我们需要对象自己支持大小比较，或者顺序是外部某个列表列表控制的。</p>
 <p>我们可以使用map将内部数据和标记数据建立映射关系，再通过外部的list或者其他方式，从map中将数据读出来，添加到新的列表容器中，从而完成排序。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">[</span><br><span class="line">    <span class="string">&quot;page1&quot;</span>, <span class="string">&quot;page2&quot;</span>, <span class="string">&quot;page3&quot;</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">std::map&lt;String, QWidget*&gt; map;</span><br><span class="line">…</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> StringList &amp; list = QJsonDocument::<span class="built_in">fromJson</span>(<span class="built_in">readAll</span>(“order.json”)).<span class="built_in">toStdList</span>();</span><br><span class="line"></span><br><span class="line">QList&lt;QWidget*&gt; pages;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> QString&amp; key : list) &#123;</span><br><span class="line">    pages &lt;&lt; map[key];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs C++">[<br>    <span class="hljs-string">&quot;page1&quot;</span>, <span class="hljs-string">&quot;page2&quot;</span>, <span class="hljs-string">&quot;page3&quot;</span><br>]<br><br>std::map&lt;String, QWidget*&gt; map;<br>…<br><br><span class="hljs-keyword">const</span> StringList &amp; list = QJsonDocument::<span class="hljs-built_in">fromJson</span>(<span class="hljs-built_in">readAll</span>(“order.json”)).<span class="hljs-built_in">toStdList</span>();<br><br>QList&lt;QWidget*&gt; pages;<br><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> QString&amp; key : list) &#123;<br>    pages &lt;&lt; map[key];<br>&#125;<br></code></pre></td></tr></table></figure>
 
             </div>
-            
-    <div class="post__license">
-        <p>
-            <strong>Author: </strong>lxz
-        </p>
-        <p>
-            <strong>
-                Permalink: 
-            </strong>
-            <a href="https://blog.justforlxz.com/2020/06/15/CPP%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91/">https://blog.justforlxz.com/2020/06/15/CPP%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91/</a>
-        </p>
-        
-    </div>
- 
-            <div class="post-footer__meta">
-    <p>
-        updated at 2021-05-10
-    </p>
-</div> 
-            <div class="post-meta__cats">
-    
-    
-        <a href="/tags/C/" class="post-tags__link button"># C++</a>
-    
-</div> 
-        </article>
-        
-            <div class="post__comments content-card" id="comment">
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
                 
-    <h4>Comments</h4>
-    
-    
-    
-    <div id="valine_container" class="valine_thread"></div>
-
-    
-    
-    
-    
-    
-    
-
-
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/C/">C++</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/06/16/CTest%20&amp;%20QTEST/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">CTest & QTest/GTest</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/06/15/%E4%BD%BF%E7%94%A8inquirer%E6%8F%90%E4%BE%9B%E4%BA%A4%E4%BA%92%E5%BC%8Fgit-commit/">
+                        <span class="hidden-mobile">使用inquirer提供交互式git commit</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
             </div>
-        
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"jwJxh95ly6NdjTRluyKYXm6G-gzGzoHsz","appKey":"lagqr7doy2slbm7oAMGoogpg","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
     </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
 
 
-</main>
-
-            <footer class="footer">
     
 
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
 
     
-     
- 
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
 
- 
     
-        
-        <p class="footer-copyright">
-            Copyright&nbsp;©&nbsp;2021&nbsp;<a href="/">小竹&#39;s blog</a>
-        </p>
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
     
     
-    <p>Powered by <a href="https://hexo.io" target="_blank">Hexo</a> | Theme - <a href="https://github.com/ChrAlpha/hexo-theme-cards" target="_blank">Cards</a></p>
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+  <!-- 备案信息 -->
+  <div class="beian">
+    <span>
+      <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+        豫ICP备19045379号-1
+      </a>
+    </span>
+    
+  </div>
+
+
+  
 </footer>
 
-        </div>
-        
-    <script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.1.0/dist/lazyload.min.js"></script>
-    <script>
-        window.lazyLoadOptions = {
-            elements_selector: ".lazy",
-            threshold: 0
-        };
-    </script>
- 
 
- 
-    <script>
-        window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-        ga('create', 'UA-129024325-1', 'auto');
-        ga('send', 'pageview');
-    </script>
-    <script async src="https://www.google-analytics.com/analytics.js"></script>
- 
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
 
- 
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
 
- 
-    <script>
-        var _hmt = _hmt || [];
-        (function() {
-            var hm = document.createElement('script');
-            hm.src = 'https://hm.baidu.com/hm.js?49e5979358cb9ca19e5e56fc4adc4a98';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
-    </script>
- 
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
 
   
 
 
 
- 
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
 
 
-    
- 
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
 
 
-    
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
 
-    
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.4.1/dist/jquery.fancybox.min.css">
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
 
-    
-<script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.4.1/dist/jquery.fancybox.min.js"></script>
 
-    <script>
-        let lazyloadT = Boolean('true'),
-            auto_fancybox = Boolean('true')
-        if (auto_fancybox) {
-            $(".post__content").find('img').each(function () {
-                var element = document.createElement("a");
-                $(element).attr("data-fancybox", "gallery");
-                $(element).attr("href", $(this).attr("src"));
-                if (lazyloadT) {
-                    $(element).attr("href", $(this).attr("data-srcset"));
-                }
-                $(this).wrap(element);
-            });
-        } else {
-            $(".post__content").find("fancybox").find('img').each(function () {
-                var element = document.createElement("a");
-                $(element).attr("data-fancybox", "gallery");
-                $(element).attr("href", $(this).attr("src"));
-                if (lazyloadT) {
-                    $(element).attr("href", $(this).attr("data-srcset"));
-                }
-                $(this).wrap(element);
-            });
-        }
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?49e5979358cb9ca19e5e56fc4adc4a98";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
     </script>
- 
+  
 
- 
-    <script defer src="/js/b2t.js"></script>
- 
-
- 
-
- 
-
-
-    
-
-    
-    
-    
-    <script>
-        function loadComment() {
-            let e;
-            (e = document.createElement("script")).src = 'https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js',
-            document.body.appendChild(e);
-            e.onload = () => {
-                var valineConfig = {"appId":"jwJxh95ly6NdjTRluyKYXm6G-gzGzoHsz","appKey":"lagqr7doy2slbm7oAMGoogpg","placeholder":null,"path":null,"avatar":null,"meta":["nick","mail","link"],"pageSize":null,"lang":null,"visitor":null,"highlight":null,"avatarForce":null,"recordIP":null,"serverURLs":"https://jwjxh95l.lc-cn-n1-shared.com","enableQQ":null,"requiredFields":["nick","mail"],"emojiCDN":null,"emojiMaps":null};
-                valineConfig.el = '#valine_container';
-                for (var i in valineConfig) {
-                    if (valineConfig[i] === null) delete valineConfig[i];
-                }
-                new Valine(valineConfig);
-            };
-        }
-    
-        var runningOnBrowser = typeof window !== "undefined";
-        var isBot = runningOnBrowser && !("onscroll" in window) || typeof navigator !== "undefined" && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent);
-        var supportsIntersectionObserver = runningOnBrowser && "IntersectionObserver" in window;
-    
-        setTimeout(function () {
-            if (!isBot && supportsIntersectionObserver) {
-                var comment_observer = new IntersectionObserver(function(entries) {
-                    if (entries[0].isIntersecting) {
-                        loadComment();
-                        comment_observer.disconnect();
-                    }
-                }, { threshold: [0] });
-                comment_observer.observe(document.getElementById('comment'));
-            } else {
-                loadComment();
-            }
-        }, 1);
+  
+    <!-- Google Analytics -->
+    <script defer>
+      window.ga = window.ga || function () { (ga.q = ga.q || []).push(arguments) };
+      ga.l = +new Date;
+      ga('create', 'UA-129024325-1', 'auto');
+      ga('send', 'pageview');
     </script>
+    <script async src='https://www.google-analytics.com/analytics.js'></script>
+  
 
+  
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
+  
 
-    
+  
+
+  
 
 
 
-    </body>
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
 </html>
